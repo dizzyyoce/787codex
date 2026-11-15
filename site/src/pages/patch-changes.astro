@@ -3,13 +3,16 @@ import Linked from "../components/Linked.astro";
 import Base from "../layouts/Base.astro";
 import Watch from "../components/Watch.astro";
 import Filters from "../components/Filters.astro";
-import { DATA, B, buildUrl, statusClass } from "../lib/data.js";
+import { DATA, B, buildUrl, statusClass, byVideoDate, comparePatch } from "../lib/data.js";
+// Newest patch first (many changes come from patch notes and have no video), then newest video within a patch.
+const list = byVideoDate(DATA.changes.map((c, i) => ({ ...c, anchor: "c" + (i + 1) })))
+  .sort((a, b) => comparePatch(b.patch, a.patch));
 const patches = [...new Set(DATA.changes.map((c) => c.patch))].sort();
 ---
 <Base title="Patch changes" section="changes" description="Patch changes that affected 787prada's PoE2 builds, and which builds they hit.">
   <Filters noun="changes" favs placeholder="Filter patch changes…" fields={[{ key: "patch", label: "Patch", values: patches }]} />
-  <div class="grid">{DATA.changes.map((c, i) => (
-    <article class="card" data-row data-id={c.fav} data-patch={c.patch} id={"c" + (i + 1)}>
+  <div class="grid">{list.map((c) => (
+    <article class="card" data-row data-id={c.fav} data-patch={c.patch} id={c.anchor}>
       <button type="button" class="star" data-fav={c.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
       <h2>{c.head}</h2><div class="meta"><span class="chip">Patch {c.patch}</span></div>
       <Linked text={c.what} /><p class="small"><b>Affects:</b> {c.affects}</p>

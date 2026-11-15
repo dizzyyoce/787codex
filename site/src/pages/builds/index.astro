@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import BuildCard from "../../components/BuildCard.astro";
 import Filters from "../../components/Filters.astro";
-import { DATA } from "../../lib/data.js";
+import { DATA, buildsNewest } from "../../lib/data.js";
 const uniq = (k) => [...new Set(DATA.builds.map((b) => b[k]).filter(Boolean))].sort();
 ---
 <Base title="Builds" section="builds" description="Every 787prada PoE2 build guide, with status, key tech, skills and links to the videos and poe.ninja.">
@@ -12,6 +12,6 @@ const uniq = (k) => [...new Set(DATA.builds.map((b) => b[k]).filter(Boolean))].s
     { key: "status", label: "Status", values: uniq("status") },
     { key: "patch", label: "Patch", values: uniq("patch") },
   ]} />
-  <div class="grid two">{DATA.builds.map((b) => <BuildCard b={b} />)}</div>
+  <div class="grid two">{buildsNewest().map((b) => <BuildCard b={b} />)}</div>
   <p class="empty" hidden>No builds match. Clear the filter or choose “all”.</p>
 </Base>

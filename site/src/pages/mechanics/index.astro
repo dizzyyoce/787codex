@@ -3,11 +3,11 @@ import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import Filters from "../../components/Filters.astro";
-import { DATA, mechUrl, short, tagClass } from "../../lib/data.js";
+import { DATA, mechUrl, short, tagClass, mechanicsNewest } from "../../lib/data.js";
 ---
 <Base title="Mechanics" section="mechanics" description="Engines and tips from 787prada's PoE2 videos: Boneshatter movement, Wolf Pack charges, Culling Strike and more.">
   <Filters noun="entries" favs placeholder="Filter mechanics…" fields={[{ key: "type", label: "Type", values: ["Engine", "Tip"] }]} />
-  <div class="grid two">{DATA.mechanics.map((m) => (
+  <div class="grid two">{mechanicsNewest().map((m) => (
     <article class="card" data-row data-id={m.fav} data-type={m.type} id={m.id.toLowerCase()}
       data-text={[m.name, m.desc, m.notes].filter(Boolean).join(" ").toLowerCase()}>
       <button type="button" class="star" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>

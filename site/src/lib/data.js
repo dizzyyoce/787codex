@@ -73,6 +73,20 @@ export const tagClass = (field, v) => "chip k-" + field + "-" + slug(v);
 export const fmtDate = (d) =>
   new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
 
+// Newest first by the upload date of each item's video (Videos tab Date). Items with no video keep
+// their workbook order after the dated ones. Ties keep workbook order unless `tie` says otherwise.
+export const videoDate = (it) => (V[it.video] && V[it.video].date) || "";
+export const byVideoDate = (items, tie) =>
+  items.slice().sort((a, b) => {
+    const da = videoDate(a), db = videoDate(b);
+    if (!da !== !db) return da ? -1 : 1;
+    return db.localeCompare(da) || (tie ? tie(a, b) : 0);
+  });
+const idDesc = (a, b) => b.id.localeCompare(a.id, undefined, { numeric: true });
+export const buildsNewest = (list = data.builds) => byVideoDate(list, idDesc);
+export const mechanicsNewest = () => byVideoDate(data.mechanics, idDesc);
+export const comparePatch = (a, b) => String(a || "").localeCompare(String(b || ""), undefined, { numeric: true });
+
 export const newestVideos = (n = 3) => data.videos.slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, n);
 
 export const SECTIONS = [

@@ -1,13 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
 import BuildCard from "../components/BuildCard.astro";
-import { DATA, V, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
+import { DATA, url, buildUrl, mechUrl, newestVideos, buildsNewest } from "../lib/data.js";
 // Newest first by the YouTube upload date of each build's video; same-day ties go to the higher Build ID.
-const vdate = (b) => V[b.video]?.date || "";
-const latest = DATA.builds
-  .filter((b) => b.status === "Current")
-  .sort((a, b) => vdate(b).localeCompare(vdate(a)) || b.id.localeCompare(a.id, undefined, { numeric: true }))
-  .slice(0, 6);
+const latest = buildsNewest(DATA.builds.filter((b) => b.status === "Current")).slice(0, 6);
 const nv = newestVideos(4);
 // Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
 const redirects = {
