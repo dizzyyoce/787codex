@@ -1,0 +1,32 @@
+name: Check the site builds
+
+# Runs on every pull request: builds the site the same way the publish does,
+# so a broken change shows a red cross before it's merged.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: pip install openpyxl==3.1.5
+      - name: Turn compendium.xlsx into the site's data
+        run: python scripts/export.py compendium.xlsx site/src/data/codex.json
+      - name: Build the site
+        working-directory: site
+        run: |
+          npm ci
+          npm run build
