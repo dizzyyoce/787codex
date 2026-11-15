@@ -3,7 +3,7 @@ import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import BuildTags from "../../components/BuildTags.astro";
-import { DATA, B, M, V, url, buildUrl, mechUrl, statusClass, short } from "../../lib/data.js";
+import { DATA, B, M, V, url, buildUrl, mechUrl, statusClass, short, relatedBuilds } from "../../lib/data.js";
 
 export function getStaticPaths() {
   return DATA.builds.map((b) => ({ params: { slug: b.slug }, props: { b } }));
@@ -12,6 +12,7 @@ const { b } = Astro.props;
 const newer = b.supersededById ? B[b.supersededById] : null;
 const older = b.olderIds.map((id) => B[id]);
 const video = b.video ? V[b.video] : null;
+const related = relatedBuilds(b);
 const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
 ---
 <Base title={b.name + (b.version ? ` (${b.version})` : "")} section="builds" image={`og/builds/${b.slug}.png`}
@@ -64,6 +65,12 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
       {older.length > 0 && <>
         <h3>Earlier versions</h3>
         <ul class="related">{older.map((o) => <li><a href={buildUrl(o)} data-hc={"b:" + o.id}>{o.name}{o.version ? ` (${o.version})` : ""}</a> <span class={"pill " + statusClass(o.status)}>{o.status}</span></li>)}</ul>
+      </>}
+      {related.length > 0 && <>
+        <h3>Related builds</h3>
+        <ul class="related">{related.map(({ o, why }) => (
+          <li><a href={buildUrl(o)} data-hc={"b:" + o.id}>{o.name}{o.version ? ` (${o.version})` : ""}</a>
+            <span class={"pill " + statusClass(o.status)}>{o.status}</span><span class="small">{why}</span></li>))}</ul>
       </>}
     </article>
   </div>
