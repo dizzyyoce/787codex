@@ -22,9 +22,10 @@ export const newestVideos = (n = 3) => data.videos.slice().sort((a, b) => b.date
 export const SECTIONS = [
   { key: "builds", label: "Builds", path: "builds/", count: data.builds.length },
   { key: "mechanics", label: "Mechanics", path: "mechanics/", count: data.mechanics.length },
-  { key: "changes", label: "Patch changes", path: "patch-changes/", count: data.changes.length },
-  { key: "toc", label: "Trial of Chaos", path: "trial-of-chaos/", count: data.toc.length },
   { key: "mindset", label: "Mindset", path: "mindset/", count: data.mindset.length },
+  { key: "toc", label: "Trial of Chaos", path: "trial-of-chaos/", count: data.toc.length },
+  // `italic`: the word shown in italics in the section tabs
+  { key: "changes", label: "Patch Changes", italic: "Changes", path: "patch-changes/", count: data.changes.length },
   { key: "videos", label: "Videos", path: "videos/", count: data.videos.length },
 ];
 
