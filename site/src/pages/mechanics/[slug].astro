@@ -1,7 +1,7 @@
 ---
 import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
-import Watch from "../../components/Watch.astro";
+import VideoPanel from "../../components/VideoPanel.astro";
 import { DATA, V, url, buildUrl, statusClass, short } from "../../lib/data.js";
 
 export function getStaticPaths() {
@@ -14,23 +14,19 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
 <Base title={m.name} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
   <div class="detail">
     <div class="crumbs"><a href={url("mechanics/")}>Mechanics</a> › {m.type}</div>
+    <div class="dgrid">
+    <VideoPanel main={m.video} more={m.more} />
     <article class="card">
       <h1 class="dtitle">{m.name}</h1>
       <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
       <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
-      <div class="links">
-        <Watch id={m.video} />
-        {m.notesUrl && <a class="btn" href={m.notesUrl} target="_blank" rel="noopener">{m.notes} ↗</a>}
-      </div>
+      {m.notesUrl && <div class="links"><a class="btn" href={m.notesUrl} target="_blank" rel="noopener">{m.notes} ↗</a></div>}
       {usedBy.length > 0 && <>
         <h3>Builds that use this</h3>
         <ul class="related">{usedBy.map((b) => <li><a href={buildUrl(b)} data-hc={"b:" + b.id}>{b.name}{b.version ? ` (${b.version})` : ""}</a> <span class={"pill " + statusClass(b.status)}>{b.status}</span></li>)}</ul>
       </>}
-      {more.length > 0 && <>
-        <h3>Also covered in</h3>
-        <ul class="related">{more.map((v) => <li><a href={v.url} target="_blank" rel="noopener">{v.title}</a> <span class="small">{v.date} · {v.id}</span></li>)}</ul>
-      </>}
     </article>
+    </div>
   </div>
 </Base>

@@ -100,3 +100,13 @@ export function relatedBuilds(b, n = 4) {
     .sort((x, y) => y.score - x.score)
     .slice(0, n);
 }
+
+/** YouTube video ID from a watch / youtu.be / shorts link. */
+export function ytId(u) {
+  try {
+    const x = new URL(u);
+    if (x.hostname.includes("youtu.be")) return x.pathname.slice(1);
+    if (x.pathname.startsWith("/shorts/")) return x.pathname.split("/")[2];
+    return x.searchParams.get("v");
+  } catch { return null; }
+}
