@@ -11,12 +11,51 @@ let lastFocus = null;
 const TYPE_RANK = { Build: 0, "Mechanic · Engine": 1, "Mechanic · Tip": 1, "Patch change": 2, Mindset: 3, "Trial of Chaos": 3, Video: 4 };
 const STATUS_PENALTY = { Superseded: 15, Dead: 15 };
 
-function score(it, q, toks) {
+// Common PoE short forms: typing the short form also finds the full phrase.
+const ALIASES = {
+  ci: "chaos inoculation", coc: "cast on crit", cod: "cast on dodge", comd: "cast on minion death",
+  aoe: "area of effect", lw: "lightning warp", ms: "movement speed", conc: "concussive", es: "energy shield",
+};
+
+// Edit distance, giving up once it exceeds `max` (typo tolerance).
+function near(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return false;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (cur[j] < best) best = cur[j];
+    }
+    if (best > max) return false;
+    prev = cur;
+  }
+  return prev[b.length] <= max;
+}
+// A misspelt word matches a whole word or the start of one ("boneshater", "concusive", "lightnin").
+function fuzzy(words, t) {
+  if (t.length < 3) return false;
+  if (t.length === 3) return words.some((w) => w.length <= 4 && near(t, w, 1)); // "pak" -> "pack"
+  const max = t.length >= 7 ? 2 : 1;
+  return words.some((w) => near(t, w, max) || (w.length > t.length && near(t, w.slice(0, t.length), max)));
+}
+const reEsc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const wordRe = (t) => new RegExp(`(^|[^a-z0-9])${reEsc(t)}($|[^a-z0-9])`); // whole word
+const startRe = (t) => new RegExp(`(^|[^a-z0-9])${reEsc(t)}`);            // start of a word
+
+function score(it, q, toks, exact) {
   let s = 0;
   for (const t of toks) {
-    const inTitle = it._t.includes(t);
-    if (!inTitle && !it._x.includes(t)) return -1;
-    s += inTitle ? 10 : 2;
+    const alias = ALIASES[t];
+    // 1–3 letter searches match whole words only, so "ci" doesn't find "decimating"
+    const re = t.length <= 3 ? wordRe(t) : startRe(t);
+    const has = (str) => re.test(str);
+    if (has(it._t) || (alias && it._t.includes(alias))) s += 10;
+    else if (has(it._x) || (alias && it._x.includes(alias))) s += 2;
+    else if (!exact.has(t) && fuzzy(it._tw, t)) s += 8;
+    else if (!exact.has(t) && fuzzy(it._w, t)) s += 1;
+    else return -1;
   }
   if (it._t.startsWith(q)) s += 40;
   else if (it._t.includes(q)) s += 20;
@@ -30,7 +69,12 @@ async function search(q) {
     results = items.filter((it) => it.type === "Build" && it.status === "Current").slice(0, 8);
   } else {
     const toks = q.split(/\s+/);
-    results = items.map((it) => [score(it, q, toks), it]).filter(([s]) => s >= 0)
+    // typo matching only for words that match nothing exactly ("ward" shouldn't find "warp")
+    const exact = new Set(toks.filter((t) => {
+      const re = t.length <= 3 ? wordRe(t) : startRe(t);
+      return items.some((it) => re.test(it._t) || re.test(it._x)) || ALIASES[t];
+    }));
+    results = items.map((it) => [score(it, q, toks, exact), it]).filter(([s]) => s >= 0)
       .sort((a, b) => b[0] - a[0]).slice(0, 30).map(([, it]) => it);
   }
   sel = 0;
