@@ -64,10 +64,21 @@ html.noscroll { overflow: hidden; }
 @media (max-width: 600px) { .palette { padding: 0; } .palette-box { max-height: 100%; height: 100%; border-radius: 0; width: 100%; } }
 
 /* hover card */
-.hovercard { position: fixed; z-index: 40; width: 360px; max-width: calc(100vw - 16px); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgb(0 0 0 / .2); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
-.hovercard[hidden] { display: none; }
+.hovercard { position: fixed; z-index: 40; width: 380px; max-width: calc(100vw - 16px); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgb(0 0 0 / .25); padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+.hc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px; }
+.hc-tools { display: flex; gap: 4px; }
+.hc-btn { font: 600 15px/1 var(--body); width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); cursor: pointer; padding: 0; }
+.hc-btn:hover { border-color: var(--accent); color: var(--accent); }
 .hc-title { font: 700 19px/1.15 var(--display); }
 .hovercard .text { font-size: 14px; }
+.hovercard .hc-body { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.hc-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.hc-links .btn { font-size: 13px; padding: 5px 9px; }
+.hc-hint { font-size: 12px; color: var(--muted); }
+.hovercard.pinned { z-index: 60; max-height: 75vh; overflow-y: auto; border-color: var(--accent); box-shadow: 0 14px 40px rgb(0 0 0 / .35); }
+.hovercard.pinned .hc-head, .hovercard.pinned .hc-title { cursor: move; user-select: none; }
+.hovercard.pinned .hc-body { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.hovercard.pinned.dragging { opacity: .92; }
 [hidden] { display: none !important; }
 a.chip { text-decoration: none; }
 a.chip:hover { text-decoration: underline; }
