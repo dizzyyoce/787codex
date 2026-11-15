@@ -19,7 +19,7 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
   description={`${b.name}: ${b.cls} ${b.asc} build from 787prada. ${short(b.tech, 140)}`}>
   <div class="detail">
     <div class="crumbs"><a href={url("builds/")}>Builds</a> › {b.asc}</div>
-    <div class="dgrid">
+    <div class="dgrid text-first">
     <VideoPanel main={b.video} label="Build guide" />
     <article class="card">
       <div class="dhead"><h1 class="dtitle" data-date={video ? video.date : undefined}>{b.name}</h1><button type="button" class="star big" data-fav={b.id} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
