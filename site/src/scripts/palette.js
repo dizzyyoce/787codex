@@ -1,5 +1,5 @@
 // Keyboard-first search: press "/" or Ctrl/Cmd+K anywhere, type, arrow keys, Enter.
-import { loadIndex, base, esc, statusClass } from "./index.js";
+import { loadIndex, esc, statusClass } from "./index.js";
 
 const pal = document.getElementById("palette");
 const input = document.getElementById("pq");
@@ -104,15 +104,13 @@ pal.querySelector("[data-close-palette]").addEventListener("click", close);
 pal.addEventListener("mousedown", (e) => { if (e.target === pal) close(); });
 document.querySelectorAll("[data-open-palette]").forEach((b) => b.addEventListener("click", () => open()));
 
-const SHORTCUTS = { KeyB: "builds/", KeyM: "mechanics/", KeyP: "patch-changes/", KeyT: "trial-of-chaos/", KeyI: "mindset/", KeyV: "videos/", KeyH: "" };
 document.addEventListener("keydown", (e) => {
   const t = e.target;
   const typing = t.isContentEditable || /^(TEXTAREA|SELECT)$/.test(t.tagName) ||
     (t.tagName === "INPUT" && !/^(checkbox|radio|button|submit|reset)$/.test(t.type));
   if ((e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) { e.preventDefault(); pal.hidden ? open() : close(); return; }
   if (typing || !pal.hidden) return;
-  if (e.key === "/") { e.preventDefault(); open(); return; }
-  if (e.altKey && e.shiftKey && e.code in SHORTCUTS) { e.preventDefault(); location.href = base() + SHORTCUTS[e.code]; }
+  if (e.key === "/") { e.preventDefault(); open(); }
 });
 
 // Warm the index in the background so the first search is instant.
