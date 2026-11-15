@@ -2,6 +2,7 @@
 import "../styles/base.css";
 import "../styles/extra.css";
 import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
+import { GOATCOUNTER } from "../lib/config.js";
 
 const { title, description, section, compactHeader = true, image = "og/default.png" } = Astro.props;
 const fullTitle = title ? `${title} · 787prada Codex` : "787prada Codex";
@@ -31,6 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <link rel="manifest" href={url("manifest.webmanifest")}>
 <link rel="apple-touch-icon" href={url("icon-192.png")}>
 <meta name="theme-color" content="#15161a">
+{GOATCOUNTER && <script is:inline async data-goatcounter={`https://${GOATCOUNTER}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
