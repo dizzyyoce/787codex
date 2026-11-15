@@ -3,7 +3,7 @@ import "../styles/base.css";
 import "../styles/extra.css";
 import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
 
-const { title, description, section, compactHeader = true } = Astro.props;
+const { title, description, section, compactHeader = true, image = "og/default.png" } = Astro.props;
 const fullTitle = title ? `${title} · 787prada Codex` : "787prada Codex";
 const desc = description || "A community reference compiled from 787prada’s PoE2 build guides, mechanics breakdowns and strategy videos.";
 const nv = newestVideos(1)[0];
@@ -21,8 +21,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <meta property="og:title" content={fullTitle}>
 <meta property="og:description" content={desc}>
 <meta property="og:url" content={canonical}>
-<meta property="og:image" content={new URL(url("logo.jpg"), Astro.site)}>
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content={new URL(url(image), Astro.site)}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="787prada Codex">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content={new URL(url(image), Astro.site)}>
 <link rel="icon" href={url("logo.jpg")}>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

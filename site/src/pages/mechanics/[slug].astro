@@ -11,7 +11,7 @@ const { m } = Astro.props;
 const usedBy = DATA.builds.filter((b) => b.mechIds.includes(m.id));
 const more = m.more.map((id) => V[id]).filter(Boolean);
 ---
-<Base title={m.name} section="mechanics" description={short(m.desc, 160)}>
+<Base title={m.name} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
   <div class="detail">
     <div class="crumbs"><a href={url("mechanics/")}>Mechanics</a> › {m.type}</div>
     <article class="card">
