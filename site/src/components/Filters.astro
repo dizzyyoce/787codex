@@ -1,6 +1,6 @@
 ---
 // A filter bar for list pages. fields: [{ key, label, values }]
-const { fields = [], noun = "entries", hideOld = false, placeholder = "Filter this list…" } = Astro.props;
+const { fields = [], noun = "entries", hideOld = false, favs = false, placeholder = "Filter this list…" } = Astro.props;
 ---
 <div class="filters" data-filters data-noun={noun}>
   <label class="sr" for="ftext" style="position:absolute;left:-9999px">Filter</label>
@@ -14,6 +14,7 @@ const { fields = [], noun = "entries", hideOld = false, placeholder = "Filter th
       </select>
     </>
   ))}
+  {favs && <label class="toggle"><input type="checkbox" id="favOnly"> ★ Favourites only</label>}
   {hideOld && <label class="toggle"><input type="checkbox" id="hideOld" checked> Hide superseded versions</label>}
   <span class="count"></span>
 </div>

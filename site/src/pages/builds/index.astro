@@ -6,7 +6,7 @@ import { DATA } from "../../lib/data.js";
 const uniq = (k) => [...new Set(DATA.builds.map((b) => b[k]).filter(Boolean))].sort();
 ---
 <Base title="Builds" section="builds" description="Every 787prada PoE2 build guide, with status, key tech, skills and links to the videos and poe.ninja.">
-  <Filters noun="builds" hideOld placeholder="Filter builds…" fields={[
+  <Filters noun="builds" hideOld favs placeholder="Filter builds…" fields={[
     { key: "cls", label: "Class", values: uniq("cls") },
     { key: "asc", label: "Ascendancy", values: uniq("asc") },
     { key: "status", label: "Status", values: uniq("status") },

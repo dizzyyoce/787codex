@@ -8,7 +8,7 @@ const types = [...new Set(list.map((v) => v.type).filter(Boolean))].sort();
 <Base title="Videos" section="videos" description="Every 787prada video the Codex draws on, newest first.">
   <Filters noun="videos" placeholder="Filter videos…" fields={[{ key: "type", label: "Type", values: types }]} />
   <div class="tablewrap"><table class="vids"><tbody>{list.map((v) => (
-    <tr data-row data-type={v.type}><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
+    <tr data-row data-type={v.type} data-date={v.date}><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
       <div class="meta" style="margin-top:4px"><span class="chip">{v.type}</span><span class="chip">{v.patch}</span><span class="chip">{v.id}</span></div></td></tr>))}
   </tbody></table></div>
   <p class="empty" hidden>Nothing matches that filter.</p>

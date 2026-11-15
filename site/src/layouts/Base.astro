@@ -51,7 +51,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </button>
     <nav class="tabs" aria-label="Sections">
       {SECTIONS.map((s) => (
-        <a href={url(s.path)} aria-current={s.key === section ? "page" : undefined}>{s.label}<span class="n">{s.count}</span></a>
+        <a href={url(s.path)} data-tab={s.key} aria-current={s.key === section ? "page" : undefined}>{s.label}<span class="n">{s.count}</span></a>
       ))}
     </nav>
   </div>
@@ -81,6 +81,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <script>
   import "../scripts/palette.js";
   import "../scripts/hovercard.js";
+  import "../scripts/personal.js";
 </script>
 </body>
 </html>

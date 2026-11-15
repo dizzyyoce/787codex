@@ -8,7 +8,7 @@ export function GET() {
   for (const b of DATA.builds) {
     items.push({
       k: "b:" + b.id, type: "Build", title: b.name + (b.version ? ` (${b.version})` : ""), url: buildUrl(b),
-      sub: [b.cls, b.asc, "Patch " + b.patch].join(" · "), status: b.status, cls: b.cls, asc: b.asc, patch: b.patch, skills: b.skills,
+      sub: [b.cls, b.asc, "Patch " + b.patch].join(" · "), status: b.status, date: b.video && V[b.video] ? V[b.video].date : undefined, cls: b.cls, asc: b.asc, patch: b.patch, skills: b.skills,
       body: b.tech, video: vid(b.video), ninja: b.ninja || undefined,
       text: [b.name, b.version, b.nick, b.cls, b.asc, b.skills, b.tech, b.mech].filter(Boolean).join(" "),
     });
@@ -32,7 +32,7 @@ export function GET() {
     body: p.text, video: vid(p.video), text: [p.cat, p.title, p.text].filter(Boolean).join(" "),
   }));
   for (const v of DATA.videos) {
-    items.push({ k: "v:" + v.id, type: "Video", title: v.title, url: v.url, external: true,
+    items.push({ k: "v:" + v.id, type: "Video", title: v.title, url: v.url, external: true, date: v.date,
       sub: [v.date, v.type, v.patch].filter(Boolean).join(" · "), text: [v.title, v.type, v.id].join(" ") });
   }
   return new Response(JSON.stringify(items), { headers: { "Content-Type": "application/json" } });

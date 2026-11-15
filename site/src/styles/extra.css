@@ -99,3 +99,19 @@ a.mlink:hover { color: var(--accent); text-decoration-style: solid; }
 .related.changes li { display: block; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .related.changes li:last-child { border-bottom: 0; }
 .related.changes .small { display: block; margin-top: 3px; }
+/* favourites + new badges */
+.card { position: relative; }
+.card .star { position: absolute; top: 10px; right: 10px; }
+.card h2 { padding-right: 34px; }
+.star { font-size: 18px; line-height: 1; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid transparent; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; padding: 0; }
+.star:hover { border-color: var(--line); color: var(--accent); }
+.star[aria-pressed="true"] { color: var(--accent); }
+.star.big { font-size: 24px; width: 40px; height: 40px; flex: none; }
+.dhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.newbadge { display: inline-block; vertical-align: middle; margin-left: 8px; font: 700 11px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 3px 7px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.newdot { margin-left: 6px; font: 700 11px/1 var(--body); padding: 2px 6px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.favlist { list-style: none; margin: 0 0 8px; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.favlist li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 8px 8px 8px 14px; border-bottom: 1px solid var(--line); }
+.favlist li:last-child { border-bottom: 0; }
+.favlist li a { font-weight: 600; }
+.favlist li .star { margin-left: auto; }
