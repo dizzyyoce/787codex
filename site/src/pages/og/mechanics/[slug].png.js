@@ -5,7 +5,7 @@ export const getStaticPaths = () => DATA.mechanics.map((m) => ({ params: { slug:
 
 export async function GET({ props: { m } }) {
   return pngResponse(await ogImage({
-    kicker: m.type === "Engine" ? "Mechanic · Engine" : "Mechanic · Tip", title: m.name,
+    kicker: m.type === "Engine" ? "Mechanic · Engine" : "Mechanic · Tip", title: m.head,
     chips: m.patch ? [{ text: "Patch " + m.patch }] : [], body: m.desc,
   }));
 }

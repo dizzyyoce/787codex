@@ -2,6 +2,39 @@ import data from "../data/codex.json";
 
 export const DATA = data;
 
+// Headings are shown in title case (AP style) without changing the workbook, where the
+// capitalisation drives mechanic auto-linking: every word capitalised except short articles,
+// conjunctions and prepositions, which stay lower case unless they start or end the heading or
+// follow a colon or dash. Words that already have capitals inside them (PoE2, AoE, iLvl) are kept.
+const SMALL = new Set(["a", "an", "the", "and", "but", "or", "nor", "for", "so", "yet", "if", "as", "at", "by", "in", "of", "off", "on", "per", "to", "up", "via", "vs", "vs."]);
+export function titleCase(s) {
+  if (!s) return s;
+  const parts = String(s).split(/(\s+)/);
+  const words = parts.filter((p) => p.trim());
+  let wi = 0, afterBreak = true;
+  return parts.map((p) => {
+    if (!p.trim()) return p;
+    const first = wi === 0, last = wi === words.length - 1;
+    wi++;
+    const brk = afterBreak;
+    afterBreak = /[:—–]$/.test(p) || p === "-" || p === "—" || p === "–";
+    return p.split(/([-/])/).map((w, i, arr) => {
+      if (w === "-" || w === "/") return w;
+      const m = w.match(/^([^A-Za-z0-9]*)([A-Za-z0-9].*)?$/);
+      if (!m || !m[2]) return w;
+      const [, lead, word] = m;
+      const bare = word.replace(/[^A-Za-z.]+$/, "").toLowerCase();
+      if (/[A-Z]/.test(word.slice(1))) return w;                      // keep PoE2, AoE, DPS
+      if (!first && !last && !brk && i === 0 && arr.length === 1 && (!lead || lead === "(") && SMALL.has(bare)) return lead + word.toLowerCase();
+      return lead + word[0].toUpperCase() + word.slice(1);
+    }).join("");
+  }).join("");
+}
+for (const m of data.mechanics) m.head = titleCase(m.name);
+for (const c of data.changes) c.head = titleCase(c.item);
+for (const t of data.toc) t.head = titleCase(t.topic);
+for (const p of data.mindset) p.head = titleCase(p.title);
+
 // Favourite keys, stable across workbook updates. Builds keep their bare ID (older saved
 // favourites); everything else is "<kind>:<ID or slug of its title>".
 {

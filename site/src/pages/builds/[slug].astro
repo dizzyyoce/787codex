@@ -47,7 +47,7 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
       {changes.length > 0 && <>
         <h3>Patch changes affecting this build</h3>
         <ul class="related changes">{changes.map((c) => (
-          <li><span class="chip">Patch {c.patch}</span> <a href={url(`patch-changes/#c${c.n}`)}><b>{c.item}</b></a>
+          <li><span class="chip">Patch {c.patch}</span> <a href={url(`patch-changes/#c${c.n}`)}><b>{c.head}</b></a>
             <span class="small">{c.what}</span></li>))}</ul>
       </>}
 
