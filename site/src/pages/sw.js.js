@@ -20,7 +20,9 @@ self.addEventListener("activate", (e) => {
 const networkFirst = async (req) => {
   const cache = await caches.open(CACHE);
   try {
-    const res = await fetch(req);
+    // "no-cache" asks GitHub whether the page changed instead of reusing the browser's
+    // 10-minute copy, so a new publish shows up straight away (an unchanged page is a tiny reply).
+    const res = await fetch(req, { cache: "no-cache" });
     if (res.ok) cache.put(req, res.clone());
     return res;
   } catch {
