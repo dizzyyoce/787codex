@@ -1,7 +1,7 @@
 ---
 import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
-import Watch from "../../components/Watch.astro";
+import VideoPanel from "../../components/VideoPanel.astro";
 import BuildTags from "../../components/BuildTags.astro";
 import { DATA, B, M, V, url, buildUrl, mechUrl, statusClass, short, relatedBuilds } from "../../lib/data.js";
 
@@ -19,6 +19,8 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
   description={`${b.name}: ${b.cls} ${b.asc} build from 787prada. ${short(b.tech, 140)}`}>
   <div class="detail">
     <div class="crumbs"><a href={url("builds/")}>Builds</a> › {b.asc}</div>
+    <div class="dgrid">
+    <VideoPanel main={b.video} label="Build guide" />
     <article class="card">
       <div class="dhead"><h1 class="dtitle" data-date={video ? video.date : undefined}>{b.name}</h1><button type="button" class="star big" data-fav={b.id} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
       {b.version && <div class="ver">{b.version}</div>}
@@ -50,7 +52,6 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
       </>}
 
       <div class="links">
-        <Watch id={b.video} label="Watch the guide" />
         {b.ninja ? <a class="btn" href={b.ninja} target="_blank" rel="noopener">poe.ninja ↗</a>
           : b.ninjaNote && <span class="btn off">poe.ninja: {String(b.ninjaNote).toLowerCase()}</span>}
         {b.moba && <a class="btn" href={b.moba} target="_blank" rel="noopener">Mobalytics ↗</a>}
@@ -73,5 +74,6 @@ const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
             <span class={"pill " + statusClass(o.status)}>{o.status}</span><span class="small">{why}</span></li>))}</ul>
       </>}
     </article>
+    </div>
   </div>
 </Base>
