@@ -74,7 +74,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </div>
     <nav class="tabs" aria-label="Sections">
       {SECTIONS.map((s) => (
-        <a href={url(s.path)} data-tab={s.key} aria-current={s.key === section ? "page" : undefined}>{s.label}<span class="n">{s.count}</span></a>
+        <a href={url(s.path)} data-tab={s.key} aria-current={s.key === section ? "page" : undefined}>{s.italic ? <>{s.label.replace(s.italic, "").trim()} <em>{s.italic}</em></> : s.label}<span class="n">{s.count}</span></a>
       ))}
     </nav>
   </div>
