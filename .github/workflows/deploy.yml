@@ -22,16 +22,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - run: pip install openpyxl==3.1.5
-      - name: Generate the page from compendium.xlsx
+      - name: Turn compendium.xlsx into the site's data (warnings show on the run's summary page)
+        run: python scripts/export.py compendium.xlsx site/src/data/codex.json
+      - name: Build the site
+        working-directory: site
         run: |
-          mkdir _site
-          cp compendium.xlsx "_site/787prada_Codex.xlsx"
-          python scripts/site.py compendium.xlsx _site/index.html "787prada_Codex.xlsx"
+          npm ci
+          npm run build
+      - name: Add the spreadsheet download
+        run: cp compendium.xlsx "site/dist/787prada_Codex.xlsx"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: site/dist
 
   deploy:
     needs: build

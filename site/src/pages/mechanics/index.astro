@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import Watch from "../../components/Watch.astro";
+import Filters from "../../components/Filters.astro";
+import { DATA, mechUrl, short } from "../../lib/data.js";
+---
+<Base title="Mechanics" section="mechanics" description="Engines and tips from 787prada's PoE2 videos: Boneshatter movement, Wolf Pack charges, Culling Strike and more.">
+  <Filters noun="entries" placeholder="Filter mechanics…" fields={[{ key: "type", label: "Type", values: ["Engine", "Tip"] }]} />
+  <div class="grid two">{DATA.mechanics.map((m) => (
+    <article class="card" data-row data-type={m.type} id={m.id.toLowerCase()}
+      data-text={[m.name, m.desc, m.notes].filter(Boolean).join(" ").toLowerCase()}>
+      <h2><a class="title" href={mechUrl(m)} data-hc={"m:" + m.id}>{m.name}</a></h2>
+      <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
+      <p class="text">{short(m.desc, 260)}</p>
+      <div class="links"><Watch id={m.video} /><a class="btn" href={mechUrl(m)}>Details →</a></div>
+    </article>))}
+  </div>
+  <p class="empty" hidden>Nothing matches that filter.</p>
+</Base>

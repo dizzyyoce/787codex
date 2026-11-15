@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+import BuildCard from "../components/BuildCard.astro";
+import { DATA, SECTIONS, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
+const latest = DATA.builds.filter((b) => b.status === "Current").slice(0, 6);
+const nv = newestVideos(4);
+// Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
+const redirects = {
+  builds: "builds/", mechanics: "mechanics/", changes: "patch-changes/", toc: "trial-of-chaos/", mindset: "mindset/", videos: "videos/",
+  ...Object.fromEntries(DATA.builds.map((b) => ["build-" + b.id.toLowerCase(), buildUrl(b).slice(url().length)])),
+  ...Object.fromEntries(DATA.mechanics.map((m) => [m.id.toLowerCase(), mechUrl(m).slice(url().length)])),
+};
+---
+<Base compactHeader={false} section="home">
+  <script is:inline define:vars={{ redirects, base: url() }}>
+    var h = location.hash.slice(1).toLowerCase();
+    if (h && redirects[h] !== undefined) location.replace(base + redirects[h]);
+  </script>
+  <div class="tiles">{SECTIONS.map((s) => <a class="tile" href={url(s.path)}><b>{s.label}</b><span>{s.count} entries</span></a>)}</div>
+
+  <h2 class="section">Latest builds</h2>
+  <div class="grid two">{latest.map((b) => <BuildCard b={b} />)}</div>
+  <p><a class="btn" href={url("builds/")}>All {DATA.builds.length} builds →</a></p>
+
+  <h2 class="section">Newest videos</h2>
+  <div class="tablewrap"><table class="vids"><tbody>{nv.map((v) => (
+    <tr><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
+      <div class="meta" style="margin-top:4px"><span class="chip">{v.type}</span><span class="chip">{v.patch}</span></div></td></tr>))}
+  </tbody></table></div>
+</Base>

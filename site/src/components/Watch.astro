@@ -1,0 +1,10 @@
+---
+import { V } from "../lib/data.js";
+const { id, label = "Watch" } = Astro.props;
+const v = id ? V[id] : null;
+---
+{v && (
+  <a class="btn primary" href={v.url} target="_blank" rel="noopener" title={v.title}>
+    ▶ {label} <span style="opacity:.75;font-weight:400">{id}</span>
+  </a>
+)}

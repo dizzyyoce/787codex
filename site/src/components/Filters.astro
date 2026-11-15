@@ -1,0 +1,20 @@
+---
+// A filter bar for list pages. fields: [{ key, label, values }]
+const { fields = [], noun = "entries", hideOld = false, placeholder = "Filter this list…" } = Astro.props;
+---
+<div class="filters" data-filters data-noun={noun}>
+  <label class="sr" for="ftext" style="position:absolute;left:-9999px">Filter</label>
+  <input id="ftext" class="filter" type="search" placeholder={placeholder} autocomplete="off">
+  {fields.map((f) => (
+    <>
+      <label for={"f-" + f.key} style="position:absolute;left:-9999px">{f.label}</label>
+      <select id={"f-" + f.key} data-f={f.key}>
+        <option value="">{f.label}: all</option>
+        {f.values.map((v) => <option>{v}</option>)}
+      </select>
+    </>
+  ))}
+  {hideOld && <label class="toggle"><input type="checkbox" id="hideOld" checked> Hide superseded versions</label>}
+  <span class="count"></span>
+</div>
+<script>import "../scripts/filters.js";</script>

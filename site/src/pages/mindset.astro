@@ -1,0 +1,18 @@
+---
+import Base from "../layouts/Base.astro";
+import Watch from "../components/Watch.astro";
+import Filters from "../components/Filters.astro";
+import { DATA } from "../lib/data.js";
+const cats = [...new Set(DATA.mindset.map((m) => m.cat).filter(Boolean))].sort();
+---
+<Base title="Mindset" section="mindset" description="How 787prada thinks about Path of Exile 2: core principles and how-tos.">
+  <Filters noun="ideas" placeholder="Filter mindset ideas…" fields={[{ key: "cat", label: "Category", values: cats }]} />
+  <div class="grid two">{DATA.mindset.map((m, i) => (
+    <article class="card" data-row data-cat={m.cat} id={"p" + (i + 1)}>
+      <div class="meta"><span class="chip">{m.cat}</span></div>
+      <h2>{m.title}</h2><p class="text">{m.text}</p>
+      <div class="links"><Watch id={m.video} /></div>
+      {m.more.length > 0 && <p class="small">Also in: {m.more.join(", ")}</p>}
+    </article>))}</div>
+  <p class="empty" hidden>Nothing matches that filter.</p>
+</Base>
