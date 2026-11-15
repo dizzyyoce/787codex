@@ -1,0 +1,63 @@
+---
+import Base from "../../layouts/Base.astro";
+import Watch from "../../components/Watch.astro";
+import { DATA, B, M, V, url, buildUrl, mechUrl, statusClass, short } from "../../lib/data.js";
+
+export function getStaticPaths() {
+  return DATA.builds.map((b) => ({ params: { slug: b.slug }, props: { b } }));
+}
+const { b } = Astro.props;
+const newer = b.supersededById ? B[b.supersededById] : null;
+const older = b.olderIds.map((id) => B[id]);
+const video = b.video ? V[b.video] : null;
+---
+<Base title={b.name + (b.version ? ` (${b.version})` : "")} section="builds"
+  description={`${b.name}: ${b.cls} ${b.asc} build from 787prada. ${short(b.tech, 140)}`}>
+  <div class="detail">
+    <div class="crumbs"><a href={url("builds/")}>Builds</a> › {b.asc}</div>
+    <article class="card">
+      <h1 class="dtitle">{b.name}</h1>
+      {b.version && <div class="ver">{b.version}</div>}
+      <div class="meta">
+        <span class={"pill " + statusClass(b.status)}>{b.status}</span>
+        <a class="chip" href={url("builds/?cls=" + encodeURIComponent(b.cls))}>{b.cls}</a>
+        <a class="chip" href={url("builds/?asc=" + encodeURIComponent(b.asc))}>{b.asc}</a>
+        <span class="chip">Patch {b.patch}</span>
+        {b.nick && <span class="nick">“{b.nick}”</span>}
+      </div>
+      {newer && <p class="note">There’s a newer version: <a href={buildUrl(newer)} data-hc={"b:" + newer.id}>{newer.name}{newer.version ? ` (${newer.version})` : ""}</a></p>}
+      {!newer && b.supersededBy && <p class="note">Newer version: {b.supersededBy}</p>}
+
+      <h3>Main skills</h3>
+      <div class="skills">{b.skills}</div>
+
+      <h3>Key tech</h3>
+      <p class="text">{b.tech}</p>
+
+      {b.mechParts.length > 0 && <>
+        <h3>Mechanics used</h3>
+        <ul class="mechlist">{b.mechParts.map((p) => <li>{p.id
+          ? <a class="chip" href={mechUrl(M[p.id])} data-hc={"m:" + p.id}>{p.text}</a>
+          : <span class="chip">{p.text}</span>}</li>)}</ul>
+      </>}
+
+      <div class="links">
+        <Watch id={b.video} label="Watch the guide" />
+        {b.ninja ? <a class="btn" href={b.ninja} target="_blank" rel="noopener">poe.ninja ↗</a>
+          : b.ninjaNote && <span class="btn off">poe.ninja: {String(b.ninjaNote).toLowerCase()}</span>}
+        {b.moba && <a class="btn" href={b.moba} target="_blank" rel="noopener">Mobalytics ↗</a>}
+      </div>
+
+      <dl>
+        <dt>Last checked</dt><dd>Patch {b.checked}</dd>
+        {video && <><dt>Video</dt><dd>{video.title} ({video.date})</dd></>}
+        {b.family && <><dt>Family</dt><dd>{b.family}</dd></>}
+      </dl>
+
+      {older.length > 0 && <>
+        <h3>Earlier versions</h3>
+        <ul class="related">{older.map((o) => <li><a href={buildUrl(o)} data-hc={"b:" + o.id}>{o.name}{o.version ? ` (${o.version})` : ""}</a> <span class={"pill " + statusClass(o.status)}>{o.status}</span></li>)}</ul>
+      </>}
+    </article>
+  </div>
+</Base>

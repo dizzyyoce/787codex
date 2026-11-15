@@ -1,0 +1,86 @@
+---
+import "../styles/base.css";
+import "../styles/extra.css";
+import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
+
+const { title, description, section, compactHeader = true } = Astro.props;
+const fullTitle = title ? `${title} · 787prada Codex` : "787prada Codex";
+const desc = description || "A community reference compiled from 787prada’s PoE2 build guides, mechanics breakdowns and strategy videos.";
+const nv = newestVideos(1)[0];
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{fullTitle}</title>
+<meta name="description" content={desc}>
+<link rel="canonical" href={canonical}>
+<meta property="og:type" content="website">
+<meta property="og:title" content={fullTitle}>
+<meta property="og:description" content={desc}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={new URL(url("logo.jpg"), Astro.site)}>
+<meta name="twitter:card" content="summary">
+<link rel="icon" href={url("logo.jpg")}>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body data-base={url()}>
+<header class={"top wrap" + (compactHeader ? " compact" : "")}>
+ <div class="intro">
+  <div class="brand"><a class="home" href={url()}><h1>787prada Codex</h1></a><span class="updated">Updated {fmtDate(DATA.updated)}</span></div>
+  {!compactHeader && <p class="lead">{desc}</p>}
+  {!compactHeader && <div class="newest"><b>Newest video:</b> <a href={nv.url} target="_blank" rel="noopener">{nv.title}</a></div>}
+ </div>
+ <div class="side">
+  <a href={url()}><img class="logo" src={url("logo.jpg")} alt="787prada" width="150" height="120"></a>
+  {!compactHeader && (
+  <div class="socials">
+   <a href="https://www.youtube.com/@787" target="_blank" rel="noopener" aria-label="787prada on YouTube"><img src={url("youtube.png")} alt="YouTube"></a>
+   <a href="https://www.twitch.tv/787prada" target="_blank" rel="noopener" aria-label="787prada on Twitch"><img src={url("twitch.png")} alt="Twitch"></a>
+  </div>)}
+ </div>
+</header>
+<div class="bar">
+  <div class="wrap">
+    <button class="searchbtn" type="button" data-open-palette aria-label="Search the Codex">
+      <span>Search builds, skills, mechanics…</span><kbd class="hide-touch">/</kbd>
+    </button>
+    <nav class="tabs" aria-label="Sections">
+      {SECTIONS.map((s) => (
+        <a href={url(s.path)} aria-current={s.key === section ? "page" : undefined}>{s.label}<span class="n">{s.count}</span></a>
+      ))}
+    </nav>
+  </div>
+</div>
+<main class="wrap" id="main">
+  <slot />
+</main>
+<footer class="wrap">
+  Compiled from 787prada's videos. Status shows whether a build still works as covered; "Last checked" is the patch it was last confirmed on.{" "}
+  <a href={url("787prada_Codex.xlsx")}>Download the spreadsheet (.xlsx)</a>.
+  <span class="hide-touch"> Press <kbd>/</kbd> to search, <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> builds, <kbd>M</kbd> mechanics, <kbd>V</kbd> videos.</span>
+</footer>
+
+<div class="palette" id="palette" hidden>
+  <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="palette-head">
+    <input id="pq" type="search" placeholder="Search builds, skills, mechanics, videos…" autocomplete="off" spellcheck="false"
+      role="combobox" aria-expanded="true" aria-controls="pres" aria-autocomplete="list">
+    <button type="button" class="palette-close" data-close-palette>Close</button>
+    </div>
+    <ul id="pres" role="listbox"></ul>
+    <div class="palette-foot hide-touch"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd> new tab</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+<div class="hovercard" id="hovercard" hidden></div>
+
+<script>
+  import "../scripts/palette.js";
+  import "../scripts/hovercard.js";
+</script>
+</body>
+</html>

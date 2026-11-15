@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import Watch from "../components/Watch.astro";
+import Filters from "../components/Filters.astro";
+import { DATA } from "../lib/data.js";
+const patches = [...new Set(DATA.changes.map((c) => c.patch))].sort();
+---
+<Base title="Patch changes" section="changes" description="Patch changes that affected 787prada's PoE2 builds, and which builds they hit.">
+  <Filters noun="changes" placeholder="Filter patch changes…" fields={[{ key: "patch", label: "Patch", values: patches }]} />
+  <div class="grid">{DATA.changes.map((c, i) => (
+    <article class="card" data-row data-patch={c.patch} id={"c" + (i + 1)}>
+      <h2>{c.item}</h2><div class="meta"><span class="chip">Patch {c.patch}</span></div>
+      <p class="text">{c.what}</p><p class="small"><b>Affects:</b> {c.affects}</p><p class="small">Source: {c.source}</p>
+      <div class="links"><Watch id={c.video} /></div>
+    </article>))}</div>
+  <p class="empty" hidden>Nothing matches that filter.</p>
+</Base>
