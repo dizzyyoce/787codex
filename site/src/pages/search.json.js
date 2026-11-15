@@ -20,15 +20,15 @@ export function GET() {
     });
   }
   DATA.changes.forEach((c, i) => items.push({
-    k: "c:" + i, type: "Patch change", title: c.item, url: url(`patch-changes/#c${i + 1}`), sub: "Patch " + c.patch,
+    k: c.fav, type: "Patch change", title: c.item, url: url(`patch-changes/#c${i + 1}`), sub: "Patch " + c.patch,
     body: c.what, video: vid(c.video), text: [c.item, c.what, c.affects].filter(Boolean).join(" "),
   }));
   DATA.toc.forEach((t, i) => items.push({
-    k: "t:" + i, type: "Trial of Chaos", title: t.topic, url: url(`trial-of-chaos/#t${i + 1}`), sub: t.section,
+    k: t.fav, type: "Trial of Chaos", title: t.topic, url: url(`trial-of-chaos/#t${i + 1}`), sub: t.section,
     body: t.note, video: vid(t.video), text: [t.section, t.topic, t.note].filter(Boolean).join(" "),
   }));
   DATA.mindset.forEach((p, i) => items.push({
-    k: "p:" + i, type: "Mindset", title: p.title, url: url(`mindset/#p${i + 1}`), sub: p.cat,
+    k: p.fav, type: "Mindset", title: p.title, url: url(`mindset/#p${i + 1}`), sub: p.cat,
     body: p.text, video: vid(p.video), text: [p.cat, p.title, p.text].filter(Boolean).join(" "),
   }));
   for (const v of DATA.videos) {

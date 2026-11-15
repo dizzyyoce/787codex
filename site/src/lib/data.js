@@ -1,6 +1,27 @@
 import data from "../data/codex.json";
 
 export const DATA = data;
+
+// Favourite keys, stable across workbook updates. Builds keep their bare ID (older saved
+// favourites); everything else is "<kind>:<ID or slug of its title>".
+{
+  const sl = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const give = (list, kind, name) => {
+    const seen = {};
+    for (const it of list) {
+      let k = kind + ":" + sl(name(it));
+      seen[k] = (seen[k] || 0) + 1;
+      if (seen[k] > 1) k += "-" + seen[k];
+      it.fav = k;
+    }
+  };
+  for (const b of data.builds) b.fav = b.id;
+  for (const m of data.mechanics) m.fav = "m:" + m.id;
+  for (const v of data.videos) v.fav = "v:" + v.id;
+  give(data.changes, "c", (c) => c.item);
+  give(data.toc, "t", (t) => t.topic);
+  give(data.mindset, "p", (p) => p.title);
+}
 export const V = Object.fromEntries(data.videos.map((v) => [v.id, v]));
 export const B = Object.fromEntries(data.builds.map((b) => [b.id, b]));
 export const M = Object.fromEntries(data.mechanics.map((m) => [m.id, m]));

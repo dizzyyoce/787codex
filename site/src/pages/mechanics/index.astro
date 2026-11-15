@@ -6,10 +6,11 @@ import Filters from "../../components/Filters.astro";
 import { DATA, mechUrl, short, tagClass } from "../../lib/data.js";
 ---
 <Base title="Mechanics" section="mechanics" description="Engines and tips from 787prada's PoE2 videos: Boneshatter movement, Wolf Pack charges, Culling Strike and more.">
-  <Filters noun="entries" placeholder="Filter mechanics…" fields={[{ key: "type", label: "Type", values: ["Engine", "Tip"] }]} />
+  <Filters noun="entries" favs placeholder="Filter mechanics…" fields={[{ key: "type", label: "Type", values: ["Engine", "Tip"] }]} />
   <div class="grid two">{DATA.mechanics.map((m) => (
-    <article class="card" data-row data-type={m.type} id={m.id.toLowerCase()}
+    <article class="card" data-row data-id={m.fav} data-type={m.type} id={m.id.toLowerCase()}
       data-text={[m.name, m.desc, m.notes].filter(Boolean).join(" ").toLowerCase()}>
+      <button type="button" class="star" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
       <h2><a class="title" href={mechUrl(m)} data-hc={"m:" + m.id}>{m.name}</a></h2>
       <div class="meta"><span class={tagClass("mtype", m.type)}>{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
       <Linked text={short(m.desc, 260)} exclude={m.id} />

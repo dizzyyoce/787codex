@@ -6,10 +6,10 @@ const list = DATA.videos.slice().sort((a, b) => b.date.localeCompare(a.date));
 const types = [...new Set(list.map((v) => v.type).filter(Boolean))].sort();
 ---
 <Base title="Videos" section="videos" description="Every 787prada video the Codex draws on, newest first.">
-  <Filters noun="videos" placeholder="Filter videos…" fields={[{ key: "type", label: "Type", values: types }]} />
+  <Filters noun="videos" favs placeholder="Filter videos…" fields={[{ key: "type", label: "Type", values: types }]} />
   <div class="tablewrap"><table class="vids"><tbody>{list.map((v) => (
-    <tr data-row data-type={v.type} data-date={v.date}><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
-      <div class="meta" style="margin-top:4px"><span class={tagClass("vtype", v.type)}>{v.type}</span><span class="chip">{v.patch}</span><span class="chip">{v.id}</span></div></td></tr>))}
+    <tr data-row data-id={v.fav} data-type={v.type} data-date={v.date}><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
+      <div class="meta" style="margin-top:4px"><span class={tagClass("vtype", v.type)}>{v.type}</span><span class="chip">{v.patch}</span><span class="chip">{v.id}</span></div></td><td class="f"><button type="button" class="star" data-fav={v.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></td></tr>))}
   </tbody></table></div>
   <p class="empty" hidden>Nothing matches that filter.</p>
 </Base>

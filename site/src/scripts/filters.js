@@ -27,7 +27,7 @@ if (root) {
       c.hidden = !ok;
       if (ok) n++;
     }
-    if (count) count.textContent = `${n} ${n === 1 ? noun.replace(/s$/, "") : noun}`;
+    if (count) count.textContent = `${n} ${n === 1 ? noun.replace(/ies$/, "y").replace(/s$/, "") : noun}`;
     if (empty) empty.hidden = n > 0;
     const u = new URL(location.href);
     for (const s of selects) s.value ? u.searchParams.set(s.dataset.f, s.value) : u.searchParams.delete(s.dataset.f);

@@ -191,3 +191,6 @@ header.top:not(.compact) { grid-template-columns: auto 1fr auto; }
 .k-vtype-patch-review { color: var(--k-amber); background: var(--k-amber-bg); }
 .k-vtype-mechanics { color: var(--k-yellow); background: var(--k-yellow-bg); }
 .k-vtype-mindset { color: var(--k-pink); background: var(--k-pink-bg); }
+
+/* favourite star in the videos table */
+table.vids td.f { width: 1%; padding: 4px 0 4px 4px; }

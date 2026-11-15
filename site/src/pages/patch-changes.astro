@@ -7,9 +7,10 @@ import { DATA, B, buildUrl, statusClass } from "../lib/data.js";
 const patches = [...new Set(DATA.changes.map((c) => c.patch))].sort();
 ---
 <Base title="Patch changes" section="changes" description="Patch changes that affected 787prada's PoE2 builds, and which builds they hit.">
-  <Filters noun="changes" placeholder="Filter patch changes…" fields={[{ key: "patch", label: "Patch", values: patches }]} />
+  <Filters noun="changes" favs placeholder="Filter patch changes…" fields={[{ key: "patch", label: "Patch", values: patches }]} />
   <div class="grid">{DATA.changes.map((c, i) => (
-    <article class="card" data-row data-patch={c.patch} id={"c" + (i + 1)}>
+    <article class="card" data-row data-id={c.fav} data-patch={c.patch} id={"c" + (i + 1)}>
+      <button type="button" class="star" data-fav={c.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
       <h2>{c.item}</h2><div class="meta"><span class="chip">Patch {c.patch}</span></div>
       <Linked text={c.what} /><p class="small"><b>Affects:</b> {c.affects}</p>
       {c.buildIds.length > 0 && <div class="meta">{c.buildIds.map((id) => B[id]).map((b) => (

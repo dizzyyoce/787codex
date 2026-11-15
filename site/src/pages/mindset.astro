@@ -6,9 +6,10 @@ import { DATA, tagClass } from "../lib/data.js";
 const cats = [...new Set(DATA.mindset.map((m) => m.cat).filter(Boolean))].sort();
 ---
 <Base title="Mindset" section="mindset" description="How 787prada thinks about Path of Exile 2: core principles and how-tos.">
-  <Filters noun="ideas" placeholder="Filter mindset ideas…" fields={[{ key: "cat", label: "Category", values: cats }]} />
+  <Filters noun="ideas" favs placeholder="Filter mindset ideas…" fields={[{ key: "cat", label: "Category", values: cats }]} />
   <div class="grid two">{DATA.mindset.map((m, i) => (
-    <article class="card" data-row data-cat={m.cat} id={"p" + (i + 1)}>
+    <article class="card" data-row data-id={m.fav} data-cat={m.cat} id={"p" + (i + 1)}>
+      <button type="button" class="star" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
       <div class="meta"><span class={tagClass("mcat", m.cat)}>{m.cat}</span></div>
       <h2>{m.title}</h2><p class="text">{m.text}</p>
       <div class="links"><Watch id={m.video} /></div>

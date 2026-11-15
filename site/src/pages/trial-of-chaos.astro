@@ -7,10 +7,11 @@ const sections = [...new Set(DATA.toc.map((t) => t.section).filter(Boolean))].so
 const vids = [...new Set(DATA.toc.map((t) => t.video).filter(Boolean))];
 ---
 <Base title="Trial of Chaos" section="toc" description="787prada's Trial of Chaos guide notes: which modifiers to take and avoid.">
-  <Filters noun="notes" placeholder="Filter Trial of Chaos notes…" fields={[{ key: "section", label: "Section", values: sections }]} />
+  <Filters noun="notes" favs placeholder="Filter Trial of Chaos notes…" fields={[{ key: "section", label: "Section", values: sections }]} />
   <p class="small" style="margin:-4px 0 12px">Source: {vids.map((v) => <Watch id={v} />)}</p>
   <div class="grid two">{DATA.toc.map((t, i) => (
-    <article class="card" data-row data-section={t.section} id={"t" + (i + 1)}>
+    <article class="card" data-row data-id={t.fav} data-section={t.section} id={"t" + (i + 1)}>
+      <button type="button" class="star" data-fav={t.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
       <div class="meta"><span class={tagClass("sec", t.section)}>{t.section}</span>{t.patch && <span class="chip">Patch {t.patch}</span>}</div>
       <h2>{t.topic}</h2><p class="text">{t.note}</p>
     </article>))}</div>
