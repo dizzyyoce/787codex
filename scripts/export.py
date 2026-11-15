@@ -5,7 +5,7 @@ Usage: python scripts/export.py compendium.xlsx site/src/data/codex.json
 It also prints warnings for things worth fixing in the workbook (a missing video ID,
 a Key Tech cell that runs past three sentences, and so on). Warnings never stop the build.
 """
-import sys, json, datetime, re
+import sys, json, datetime, re, os
 import openpyxl
 
 SRC, OUT = sys.argv[1:3]
@@ -151,6 +151,7 @@ for coll in (builds, mechanics, changes, toc, mindset):
 
 data = {"videos": videos, "builds": builds, "mechanics": mechanics, "changes": changes, "toc": toc, "mindset": mindset,
         "updated": max(v["date"] for v in videos if v["date"])}
+os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
 with open(OUT, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=1)
 
