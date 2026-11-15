@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import BuildCard from "../components/BuildCard.astro";
-import { DATA, SECTIONS, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
+import { DATA, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
 const latest = DATA.builds.filter((b) => b.status === "Current").slice(0, 6);
 const nv = newestVideos(4);
 // Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
@@ -16,8 +16,6 @@ const redirects = {
     var h = location.hash.slice(1).toLowerCase();
     if (h && redirects[h] !== undefined) location.replace(base + redirects[h]);
   </script>
-  <div class="tiles">{SECTIONS.map((s) => <a class="tile" href={url(s.path)}><b>{s.label}</b><span>{s.count} entries</span></a>)}</div>
-
   <h2 class="section">Latest builds</h2>
   <div class="grid two">{latest.map((b) => <BuildCard b={b} />)}</div>
   <p><a class="btn" href={url("builds/")}>All {DATA.builds.length} builds →</a></p>

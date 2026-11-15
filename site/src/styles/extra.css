@@ -34,12 +34,8 @@ kbd { font: 600 12px/1 var(--body); padding: 3px 6px; border: 1px solid var(--li
 .related li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
 
 /* home */
-.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 4px 0 24px; }
-.tile { display: block; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-.tile:hover { border-color: var(--accent); }
-.tile b { display: block; font: 700 20px/1.1 var(--display); letter-spacing: .01em; }
-.tile span { color: var(--muted); font-size: 14px; }
 h2.section { font: 700 22px/1.1 var(--display); letter-spacing: .02em; margin: 22px 0 10px; }
+main > h2.section:first-of-type { margin-top: 4px; }
 
 /* search palette */
 html.noscroll { overflow: hidden; }
