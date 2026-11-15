@@ -15,7 +15,7 @@ const LOGO = "data:image/jpeg;base64," + fs.readFileSync(path.join(root, "public
 
 const C = { bg: "#15161a", surface: "#1e2026", ink: "#ecebe8", muted: "#a3a5ad", line: "#30333b", accent: "#e09a52", chip: "#2a2c33" };
 const STATUS = {
-  "Current": ["#7fd3a4", "#18382a"], "Slight Nerf": ["#f0cf6e", "#3a3116"], "Partly Dead": ["#f3a36f", "#3d2416"],
+  "Current": ["#7fd3a4", "#18382a"], "Presumed Working": ["#7fd6cf", "#173634"], "Slight Nerf": ["#f0cf6e", "#3a3116"], "Partly Dead": ["#f3a36f", "#3d2416"],
   "Dead": ["#f19a9a", "#3d1d1f"], "Superseded": ["#b3b5bc", "#2b2d33"], "Unverified": ["#9cc3f2", "#1b2b40"],
 };
 

@@ -13,7 +13,7 @@ let hideTimer = null;
 let z = 60;
 
 const TAG_LABEL = { status: "Status", cls: "Class", asc: "Ascendancy", patch: "Patch" };
-const STATUS_ORDER = ["Current", "Slight Nerf", "Unverified", "Partly Dead", "Dead", "Superseded"];
+const STATUS_ORDER = ["Current", "Presumed Working", "Slight Nerf", "Unverified", "Partly Dead", "Dead", "Superseded"];
 
 // "tag:cls:Mercenary" -> a card listing every build with that tag
 function tagItem(key, items, a) {
