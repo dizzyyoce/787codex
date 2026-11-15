@@ -1,4 +1,5 @@
 ---
+import Linked from "./Linked.astro";
 import { buildUrl } from "../lib/data.js";
 import Watch from "./Watch.astro";
 import BuildTags from "./BuildTags.astro";
@@ -13,7 +14,7 @@ const { b } = Astro.props;
     {b.nick && <span class="nick">“{b.nick}”</span>}
   </div>
   <div class="skills">{b.skills}</div>
-  <p class="text">{b.tech}</p>
+  <Linked text={b.tech} />
   <div class="links">
     <Watch id={b.video} />
     {b.ninja ? <a class="btn" href={b.ninja} target="_blank" rel="noopener">poe.ninja ↗</a>

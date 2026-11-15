@@ -78,7 +78,8 @@ mechanics = [{"id": m["ID"], "name": m["Mechanic"], "type": m["Type"], "desc": m
               "notesUrl": m.get("Notes__url"), "patch": m["Patch"], "video": m["Video"],
               "more": split_list(m["More sources"]), "_row": m["_row"]} for m in rows("Mechanics")]
 changes = [{"patch": c["Patch"], "item": c["Item / node / mechanic"], "what": c["What changed"],
-            "affects": c["Affected build(s)"], "source": c["Source"], "video": c["Video"], "_row": c["_row"]}
+            "affects": c["Affected build(s)"], "source": c["Source"], "video": c["Video"],
+            "buildIdsCol": c.get("Build IDs"), "_row": c["_row"]}
            for c in rows("Patch Changes")]
 toc = [{"section": t["Section"], "topic": t["Topic"], "note": t["Note"], "patch": t["Patch"], "video": t["Video"],
         "_row": t["_row"]} for t in rows("Trial of Chaos")]
@@ -115,6 +116,75 @@ for b in builds:
         if mid and mid not in b["mechIds"]:
             b["mechIds"].append(mid)
 
+# --- which builds each patch change affects ----------------------------------------
+# An optional "Build IDs" column on the Patch Changes tab (e.g. "B03, B20") is used as-is.
+# Otherwise build names are matched in the "Affected build(s)" text before each " — ".
+# When several versions share a name, a version word in the text picks one ("Original");
+# otherwise the newest non-superseded version is used.
+def affected_builds(change):
+    if change.get("buildIdsCol"):
+        return [i for i in split_list(change["buildIdsCol"]) if any(b["id"] == i for b in builds)]
+    text = change["affects"] or ""
+    if re.search(r"not tied to a specific build|no builds tab entry", text, re.I):
+        return []
+    ids = []
+    for sentence in re.split(r"(?<=\.)\s+", text):
+        # keep words in brackets here: "Frog Build (Poisonburst Oracle)"
+        head = re.sub(r"[^a-z0-9]+", " ", sentence.split(" — ")[0].lower()).strip()
+        for name in sorted({b["name"] for b in builds}, key=len, reverse=True):
+            if not re.search(r"(?<![a-z0-9])" + re.escape(norm(name)) + r"(?![a-z0-9])", head):
+                continue
+            same = [b for b in builds if b["name"] == name]
+            pick = [b for b in same if b["version"] and norm(b["version"]).split()[0] in head.split()]
+            if not pick:
+                pick = [b for b in same if b["status"] != "Superseded"][:1] or same[:1]
+            for b in pick:
+                if b["id"] not in ids:
+                    ids.append(b["id"])
+            head = head.replace(norm(name), " ")
+    return ids
+
+
+for c in changes:
+    c["buildIds"] = affected_builds(c)
+    c.pop("buildIdsCol", None)
+for b in builds:
+    b["changeIdx"] = [i for i, c in enumerate(changes) if b["id"] in c["buildIds"]]
+
+# --- short names used to link mechanics inside text ("Culling Strike", "Hollow Palm Technique")
+# The name a mechanic starts with, up to the first lowercase word or "+", plus any build
+# "Mechanics used" entry that matched it. Vague single words are skipped.
+VAGUE = {"how", "order", "choosing", "checking", "treat", "attack", "area", "projectile", "crafting",
+         "overlapping", "concoction", "berserk", "charge", "mana", "weapon", "reduced", "cast"}
+CONNECT = {"on", "of", "the"}
+
+
+def lead_phrase(name):
+    toks = []
+    for t in re.split(r"\s+", re.split(r"[:(+—]", name)[0].strip()):
+        if t[:1].isupper() or (toks and t in CONNECT):
+            toks.append(t)
+        else:
+            break
+    while toks and toks[-1] in CONNECT:
+        toks.pop()
+    return " ".join(toks).strip("'\"")
+
+
+phrase_owner = {}
+for m in mechanics:
+    cands = [lead_phrase(m["name"])] + [p["text"] for b in builds for p in b["mechParts"] if p["id"] == m["id"]]
+    if m["name"].lower().startswith("reduced skill effect duration"):
+        cands.append("reduced skill effect duration")
+    for c in cands:
+        c = c.strip()
+        if not c or "+" in c or "/" in c or len(c) < 4:
+            continue
+        if " " not in c and (c.lower() in VAGUE or "-" in c):
+            continue
+        phrase_owner.setdefault(c, m["id"])
+link_phrases = sorted(({"text": t, "id": i} for t, i in phrase_owner.items()), key=lambda x: -len(x["text"]))
+
 by_name = {}
 for b in builds:
     by_name.setdefault(norm(b["name"]), b["id"])
@@ -149,7 +219,7 @@ for coll in (builds, mechanics, changes, toc, mindset):
     for it in coll:
         it.pop("_row", None)
 
-data = {"videos": videos, "builds": builds, "mechanics": mechanics, "changes": changes, "toc": toc, "mindset": mindset,
+data = {"linkPhrases": link_phrases, "videos": videos, "builds": builds, "mechanics": mechanics, "changes": changes, "toc": toc, "mindset": mindset,
         "updated": max(v["date"] for v in videos if v["date"])}
 os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
 with open(OUT, "w", encoding="utf-8") as f:

@@ -93,3 +93,9 @@ a.pill.tag:hover { box-shadow: inset 0 0 0 1px currentColor; }
 .hc-list li:last-child { border-bottom: 0; }
 .hc-list li a { font-weight: 600; flex: 1 1 100%; }
 .hc-list .pill { font-size: 11px; padding: 1px 7px; }
+/* mechanic names linked inside text */
+a.mlink { color: inherit; text-decoration: underline dotted var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.mlink:hover { color: var(--accent); text-decoration-style: solid; }
+.related.changes li { display: block; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.related.changes li:last-child { border-bottom: 0; }
+.related.changes .small { display: block; margin-top: 3px; }

@@ -1,4 +1,5 @@
 ---
+import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import BuildTags from "../../components/BuildTags.astro";
@@ -11,6 +12,7 @@ const { b } = Astro.props;
 const newer = b.supersededById ? B[b.supersededById] : null;
 const older = b.olderIds.map((id) => B[id]);
 const video = b.video ? V[b.video] : null;
+const changes = b.changeIdx.map((i) => ({ ...DATA.changes[i], n: i + 1 }));
 ---
 <Base title={b.name + (b.version ? ` (${b.version})` : "")} section="builds"
   description={`${b.name}: ${b.cls} ${b.asc} build from 787prada. ${short(b.tech, 140)}`}>
@@ -30,13 +32,20 @@ const video = b.video ? V[b.video] : null;
       <div class="skills">{b.skills}</div>
 
       <h3>Key tech</h3>
-      <p class="text">{b.tech}</p>
+      <Linked text={b.tech} />
 
       {b.mechParts.length > 0 && <>
         <h3>Mechanics used</h3>
         <ul class="mechlist">{b.mechParts.map((p) => <li>{p.id
           ? <a class="chip" href={mechUrl(M[p.id])} data-hc={"m:" + p.id}>{p.text}</a>
           : <span class="chip">{p.text}</span>}</li>)}</ul>
+      </>}
+
+      {changes.length > 0 && <>
+        <h3>Patch changes affecting this build</h3>
+        <ul class="related changes">{changes.map((c) => (
+          <li><span class="chip">Patch {c.patch}</span> <a href={url(`patch-changes/#c${c.n}`)}><b>{c.item}</b></a>
+            <span class="small">{c.what}</span></li>))}</ul>
       </>}
 
       <div class="links">

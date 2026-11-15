@@ -1,0 +1,9 @@
+---
+// Text with mechanic names turned into links (with hover cards).
+import { linkify, M, mechUrl } from "../lib/data.js";
+const { text, exclude, class: cls = "text" } = Astro.props;
+const parts = linkify(text, exclude);
+---
+<p class={cls}>{parts.map((p) => p.id
+  ? <a class="mlink" href={mechUrl(M[p.id])} data-hc={"m:" + p.id}>{p.t}</a>
+  : p.t)}</p>

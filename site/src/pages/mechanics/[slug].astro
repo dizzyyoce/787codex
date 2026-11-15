@@ -1,4 +1,5 @@
 ---
+import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import { DATA, V, url, buildUrl, statusClass, short } from "../../lib/data.js";
@@ -16,7 +17,7 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
     <article class="card">
       <h1 class="dtitle">{m.name}</h1>
       <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
-      <p class="text">{m.desc}</p>
+      <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
       <div class="links">
         <Watch id={m.video} />

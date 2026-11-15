@@ -1,4 +1,5 @@
 ---
+import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import Filters from "../../components/Filters.astro";
@@ -11,7 +12,7 @@ import { DATA, mechUrl, short } from "../../lib/data.js";
       data-text={[m.name, m.desc, m.notes].filter(Boolean).join(" ").toLowerCase()}>
       <h2><a class="title" href={mechUrl(m)} data-hc={"m:" + m.id}>{m.name}</a></h2>
       <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
-      <p class="text">{short(m.desc, 260)}</p>
+      <Linked text={short(m.desc, 260)} exclude={m.id} />
       <div class="links"><Watch id={m.video} /><a class="btn" href={mechUrl(m)}>Details →</a></div>
     </article>))}
   </div>
