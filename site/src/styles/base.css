@@ -9,13 +9,14 @@
   --accent: #9a5b1e;          /* ember bronze */
   --accent-ink: #ffffff;
   --chip: #efe9df;
-  --ok: #1f7a4a; --ok-bg: #dff3e7;
-  --warn: #8a6100; --warn-bg: #fbefc9;
-  --hot: #a34612; --hot-bg: #fbe3d4;
-  --bad: #a12b2b; --bad-bg: #f8dede;
-  --old: #5d6068; --old-bg: #e9e7e3;
-  --info: #23589a; --info-bg: #dde9f8;
-  --pw: #17736e; --pw-bg: #d9f1ef;
+  /* Status colours: colour-blind safe (Okabe-Ito based). Blue = working; yellow -> orange -> dark orange = worse; grey = retired */
+  --st-cur: #0b4f78; --st-cur-bg: #cfe5f3;
+  --st-pw: #2b6a8f; --st-pw-bg: #eaf4fb;
+  --st-nerf: #6f5600; --st-nerf-bg: #f8f0a8;
+  --st-part: #844a00; --st-part-bg: #f6d58c;
+  --st-dead: #7f2e00; --st-dead-bg: #f0b48a;
+  --st-old: #5d6068; --st-old-bg: #e9e7e3;
+  --st-unv: #7d3560; --st-unv-bg: #f6e1ec;
   --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
   --body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
   color-scheme: light;
@@ -24,16 +25,16 @@
   :root:not([data-theme="light"]) {
     --bg: #15161a; --surface: #1e2026; --ink: #ecebe8; --muted: #a3a5ad; --line: #30333b;
     --accent: #e09a52; --accent-ink: #1a1206; --chip: #2a2c33;
-    --ok: #7fd3a4; --ok-bg: #18382a; --warn: #f0cf6e; --warn-bg: #3a3116; --hot: #f3a36f; --hot-bg: #3d2416;
-    --bad: #f19a9a; --bad-bg: #3d1d1f; --old: #b3b5bc; --old-bg: #2b2d33; --info: #9cc3f2; --info-bg: #1b2b40; --pw: #7fd6cf; --pw-bg: #173634;
+    --st-cur: #8cc8ec; --st-cur-bg: #12324a; --st-pw: #b9ddf3; --st-pw-bg: #1a2a36; --st-nerf: #efe48a; --st-nerf-bg: #38341a;
+    --st-part: #f2c46a; --st-part-bg: #3e2e10; --st-dead: #ff9a5c; --st-dead-bg: #4a220c; --st-old: #b3b5bc; --st-old-bg: #2b2d33; --st-unv: #e9a9cc; --st-unv-bg: #3a1f2e;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #15161a; --surface: #1e2026; --ink: #ecebe8; --muted: #a3a5ad; --line: #30333b;
   --accent: #e09a52; --accent-ink: #1a1206; --chip: #2a2c33;
-  --ok: #7fd3a4; --ok-bg: #18382a; --warn: #f0cf6e; --warn-bg: #3a3116; --hot: #f3a36f; --hot-bg: #3d2416;
-  --bad: #f19a9a; --bad-bg: #3d1d1f; --old: #b3b5bc; --old-bg: #2b2d33; --info: #9cc3f2; --info-bg: #1b2b40; --pw: #7fd6cf; --pw-bg: #173634;
+  --st-cur: #8cc8ec; --st-cur-bg: #12324a; --st-pw: #b9ddf3; --st-pw-bg: #1a2a36; --st-nerf: #efe48a; --st-nerf-bg: #38341a;
+  --st-part: #f2c46a; --st-part-bg: #3e2e10; --st-dead: #ff9a5c; --st-dead-bg: #4a220c; --st-old: #b3b5bc; --st-old-bg: #2b2d33; --st-unv: #e9a9cc; --st-unv-bg: #3a1f2e;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -84,13 +85,13 @@ main { padding-block: 16px 48px; }
 .chip { font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--ink); white-space: nowrap; }
 .nick { font-size: 14px; color: var(--muted); font-style: italic; }
 .pill { font-size: 13px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
-.s-current { color: var(--ok); background: var(--ok-bg); }
-.s-presumed-working { color: var(--pw); background: var(--pw-bg); }
-.s-slight-nerf { color: var(--warn); background: var(--warn-bg); }
-.s-partly-dead { color: var(--hot); background: var(--hot-bg); }
-.s-dead { color: var(--bad); background: var(--bad-bg); }
-.s-superseded { color: var(--old); background: var(--old-bg); }
-.s-unverified { color: var(--info); background: var(--info-bg); }
+.s-current { color: var(--st-cur); background: var(--st-cur-bg); }
+.s-presumed-working { color: var(--st-pw); background: var(--st-pw-bg); outline: 1px dashed var(--st-pw); outline-offset: -1px; }
+.s-slight-nerf { color: var(--st-nerf); background: var(--st-nerf-bg); }
+.s-partly-dead { color: var(--st-part); background: var(--st-part-bg); }
+.s-dead { color: var(--st-dead); background: var(--st-dead-bg); }
+.s-superseded { color: var(--st-old); background: var(--st-old-bg); }
+.s-unverified { color: var(--st-unv); background: var(--st-unv-bg); }
 .skills { font-weight: 600; font-size: 15px; }
 .text { margin: 0; max-width: 65ch; white-space: pre-line; }
 .small { font-size: 14px; color: var(--muted); margin: 0; }
