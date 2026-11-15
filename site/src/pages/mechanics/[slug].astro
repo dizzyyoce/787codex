@@ -1,4 +1,5 @@
 ---
+import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
 import { DATA, V, url, buildUrl, statusClass, short } from "../../lib/data.js";
@@ -10,13 +11,13 @@ const { m } = Astro.props;
 const usedBy = DATA.builds.filter((b) => b.mechIds.includes(m.id));
 const more = m.more.map((id) => V[id]).filter(Boolean);
 ---
-<Base title={m.name} section="mechanics" description={short(m.desc, 160)}>
+<Base title={m.name} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
   <div class="detail">
     <div class="crumbs"><a href={url("mechanics/")}>Mechanics</a> › {m.type}</div>
     <article class="card">
       <h1 class="dtitle">{m.name}</h1>
       <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
-      <p class="text">{m.desc}</p>
+      <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
       <div class="links">
         <Watch id={m.video} />

@@ -35,3 +35,46 @@ export const short = (s, n = 180) => {
   const cut = s.slice(0, n);
   return cut.slice(0, cut.lastIndexOf(" ")) + "…";
 };
+
+// --- mechanic names inside text become links -------------------------------------
+// Multi-word names match any capitalisation; single words ("Ward") must match exactly.
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const seenText = new Set();
+const PHRASES = data.linkPhrases.filter((p) => {
+  const k = p.text.includes(" ") ? p.text.toLowerCase() : p.text;
+  if (seenText.has(k)) return false;
+  seenText.add(k);
+  return true;
+}).map((p) => ({
+  ...p,
+  re: new RegExp(`(?<![\\w'-])${esc(p.text)}(?![\\w-])`, p.text.includes(" ") ? "gi" : "g"),
+}));
+
+/**
+ * Split text into pieces: { t } plain text or { t, id } a mechanic link.
+ * Each mechanic is linked once per text; `exclude` skips the page's own mechanic.
+ */
+export function linkify(text, exclude) {
+  text = String(text || "");
+  const hits = [];
+  const usedIds = new Set();
+  for (const p of PHRASES) {
+    if (p.id === exclude || usedIds.has(p.id)) continue;
+    p.re.lastIndex = 0;
+    let m;
+    while ((m = p.re.exec(text))) {
+      const s = m.index, e = s + m[0].length;
+      if (!hits.some((h) => s < h.e && e > h.s)) { hits.push({ s, e, id: p.id }); usedIds.add(p.id); break; }
+    }
+  }
+  hits.sort((a, b) => a.s - b.s);
+  const out = [];
+  let i = 0;
+  for (const h of hits) {
+    if (h.s > i) out.push({ t: text.slice(i, h.s) });
+    out.push({ t: text.slice(h.s, h.e), id: h.id });
+    i = h.e;
+  }
+  if (i < text.length) out.push({ t: text.slice(i) });
+  return out;
+}

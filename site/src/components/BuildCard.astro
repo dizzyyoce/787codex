@@ -1,19 +1,21 @@
 ---
-import { buildUrl } from "../lib/data.js";
+import Linked from "./Linked.astro";
+import { buildUrl, V } from "../lib/data.js";
 import Watch from "./Watch.astro";
 import BuildTags from "./BuildTags.astro";
 const { b } = Astro.props;
 ---
-<article class="card" data-row
+<article class="card" data-row data-id={b.id} data-date={b.video && V[b.video] ? V[b.video].date : undefined}
   data-cls={b.cls} data-asc={b.asc} data-status={b.status} data-patch={b.patch}
   data-text={[b.name, b.version, b.nick, b.cls, b.asc, b.skills, b.tech, b.mech].filter(Boolean).join(" ").toLowerCase()}>
+  <button type="button" class="star" data-fav={b.id} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
   <h2><a class="title" href={buildUrl(b)} data-hc={"b:" + b.id}>{b.name}</a>{b.version && <span class="ver">{b.version}</span>}</h2>
   <div class="meta">
     <BuildTags b={b} />
     {b.nick && <span class="nick">“{b.nick}”</span>}
   </div>
   <div class="skills">{b.skills}</div>
-  <p class="text">{b.tech}</p>
+  <Linked text={b.tech} />
   <div class="links">
     <Watch id={b.video} />
     {b.ninja ? <a class="btn" href={b.ninja} target="_blank" rel="noopener">poe.ninja ↗</a>

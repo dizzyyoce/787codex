@@ -16,13 +16,18 @@ const redirects = {
     var h = location.hash.slice(1).toLowerCase();
     if (h && redirects[h] !== undefined) location.replace(base + redirects[h]);
   </script>
+  <section id="favs" hidden>
+    <h2 class="section">Your favourites</h2>
+    <ul class="favlist"></ul>
+  </section>
+
   <h2 class="section">Latest builds</h2>
   <div class="grid two">{latest.map((b) => <BuildCard b={b} />)}</div>
   <p><a class="btn" href={url("builds/")}>All {DATA.builds.length} builds →</a></p>
 
   <h2 class="section">Newest videos</h2>
   <div class="tablewrap"><table class="vids"><tbody>{nv.map((v) => (
-    <tr><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
+    <tr data-date={v.date}><td class="d">{v.date}</td><td><a href={v.url} target="_blank" rel="noopener">{v.title}</a>
       <div class="meta" style="margin-top:4px"><span class="chip">{v.type}</span><span class="chip">{v.patch}</span></div></td></tr>))}
   </tbody></table></div>
 </Base>
