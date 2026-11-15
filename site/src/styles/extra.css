@@ -119,11 +119,11 @@ a.mlink:hover { color: var(--accent); text-decoration-style: solid; }
 .favlist li:last-child { border-bottom: 0; }
 .favlist li a { font-weight: 600; }
 .favlist li .star { margin-left: auto; }
-/* detail pages: video column on the right (top of the page on phones) */
+/* detail pages: video column on the right (below the entry on phones) */
 .detail { max-width: none; }
 .dgrid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 .dgrid > article { max-width: 760px; }
-/* mechanic pages: on phones the entry comes first and its videos follow underneath */
+/* detail pages: on phones the entry comes first and its videos follow underneath */
 @media (max-width: 999px) { .dgrid.text-first > article { order: -1; } }
 @media (min-width: 1000px) {
   .dgrid { grid-template-columns: minmax(0, 1fr) 360px; }
