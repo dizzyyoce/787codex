@@ -1,4 +1,11 @@
 ---
+// Fonts are bundled with the site (no Google Fonts request; they also work offline)
+import "@fontsource/barlow-condensed/600.css";
+import "@fontsource/barlow-condensed/700.css";
+import "@fontsource/source-sans-3/400.css";
+import "@fontsource/source-sans-3/400-italic.css";
+import "@fontsource/source-sans-3/600.css";
+import "@fontsource/source-sans-3/700.css";
 import "../styles/base.css";
 import "../styles/extra.css";
 import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
@@ -33,9 +40,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <link rel="apple-touch-icon" href={url("icon-192.png")}>
 <meta name="theme-color" content="#15161a">
 {GOATCOUNTER && <script is:inline async data-goatcounter={`https://${GOATCOUNTER}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body data-base={url()} data-sw={url("sw.js")}>
 <header class={"top wrap" + (compactHeader ? " compact" : "")}>

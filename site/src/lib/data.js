@@ -78,3 +78,25 @@ export function linkify(text, exclude) {
   if (i < text.length) out.push({ t: text.slice(i) });
   return out;
 }
+
+// --- related builds ----------------------------------------------------------------
+// Other builds that share mechanics (strongest signal), ascendancy or class with this one.
+// Other versions of the same build and superseded builds are left out.
+export function relatedBuilds(b, n = 4) {
+  const short = (m) => m.name.split(/ as | lets | plus |:| \(| — /)[0];
+  return data.builds
+    .filter((o) => o.id !== b.id && o.name !== b.name && o.status !== "Superseded")
+    .map((o) => {
+      const shared = o.mechIds.filter((id) => b.mechIds.includes(id));
+      const sameAsc = o.asc === b.asc, sameCls = o.cls === b.cls;
+      const score = shared.length * 3 + (sameAsc ? 2 : 0) + (sameCls ? 1 : 0) + (o.status === "Current" ? 0.5 : 0);
+      const why = [
+        shared.length ? "Shares " + shared.map((id) => b.mechParts.find((p) => p.id === id)?.text || short(M[id])).slice(0, 3).join(", ") : "",
+        sameAsc ? "Also " + o.asc : sameCls ? "Also " + o.cls : "",
+      ].filter(Boolean).join(" · ");
+      return { o, score, why };
+    })
+    .filter((r) => r.score >= 2)
+    .sort((x, y) => y.score - x.score)
+    .slice(0, n);
+}

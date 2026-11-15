@@ -7,6 +7,8 @@ export function loadIndex() {
     for (const it of items) {
       it._t = it.title.toLowerCase();
       it._x = (it.text || "").toLowerCase();
+      it._tw = [...new Set(it._t.split(/[^a-z0-9']+/).filter((w) => w.length >= 3))];
+      it._w = [...new Set((it._t + " " + it._x).split(/[^a-z0-9']+/).filter((w) => w.length >= 3))];
     }
     return { items, byKey };
   });
