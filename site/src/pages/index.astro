@@ -1,8 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
 import BuildCard from "../components/BuildCard.astro";
-import { DATA, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
-const latest = DATA.builds.filter((b) => b.status === "Current").slice(0, 6);
+import { DATA, V, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
+// Newest first by the YouTube upload date of each build's video; same-day ties go to the higher Build ID.
+const vdate = (b) => V[b.video]?.date || "";
+const latest = DATA.builds
+  .filter((b) => b.status === "Current")
+  .sort((a, b) => vdate(b).localeCompare(vdate(a)) || b.id.localeCompare(a.id, undefined, { numeric: true }))
+  .slice(0, 6);
 const nv = newestVideos(4);
 // Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
 const redirects = {
@@ -21,7 +26,7 @@ const redirects = {
     <ul class="favlist"></ul>
   </section>
 
-  <h2 class="section">Latest builds</h2>
+  <h2 class="section">Latest Builds</h2>
   <div class="grid two">{latest.map((b) => <BuildCard b={b} />)}</div>
   <p><a class="btn" href={url("builds/")}>All {DATA.builds.length} builds →</a></p>
 
