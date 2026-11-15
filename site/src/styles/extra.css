@@ -83,3 +83,7 @@ html.noscroll { overflow: hidden; }
 a.chip { text-decoration: none; }
 a.chip:hover { text-decoration: underline; }
 @media (max-width: 520px) { .detail h1.dtitle { font-size: 28px; } .detail .card { padding: 14px 16px; } }
+/* ".wrap" sets padding: 0 16px and was cancelling the vertical spacing of main and footer */
+main.wrap { padding-block: 16px 56px; }
+footer.wrap { padding-block: 20px 40px; line-height: 1.9; }
+footer kbd { vertical-align: 1px; }
