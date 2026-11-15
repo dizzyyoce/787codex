@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>787prada Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: phone-first reference — sticky search + section tabs, one column of build/mechanic cards that widens to two on desktop. */
+:root {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --ink: #1d1f24;
+  --muted: #5d6068;
+  --line: #dedad2;
+  --accent: #9a5b1e;          /* ember bronze */
+  --accent-ink: #ffffff;
+  --chip: #efe9df;
+  --ok: #1f7a4a; --ok-bg: #dff3e7;
+  --warn: #8a6100; --warn-bg: #fbefc9;
+  --hot: #a34612; --hot-bg: #fbe3d4;
+  --bad: #a12b2b; --bad-bg: #f8dede;
+  --old: #5d6068; --old-bg: #e9e7e3;
+  --info: #23589a; --info-bg: #dde9f8;
+  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15161a; --surface: #1e2026; --ink: #ecebe8; --muted: #a3a5ad; --line: #30333b;
+    --accent: #e09a52; --accent-ink: #1a1206; --chip: #2a2c33;
+    --ok: #7fd3a4; --ok-bg: #18382a; --warn: #f0cf6e; --warn-bg: #3a3116; --hot: #f3a36f; --hot-bg: #3d2416;
+    --bad: #f19a9a; --bad-bg: #3d1d1f; --old: #b3b5bc; --old-bg: #2b2d33; --info: #9cc3f2; --info-bg: #1b2b40;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15161a; --surface: #1e2026; --ink: #ecebe8; --muted: #a3a5ad; --line: #30333b;
+  --accent: #e09a52; --accent-ink: #1a1206; --chip: #2a2c33;
+  --ok: #7fd3a4; --ok-bg: #18382a; --warn: #f0cf6e; --warn-bg: #3a3116; --hot: #f3a36f; --hot-bg: #3d2416;
+  --bad: #f19a9a; --bad-bg: #3d1d1f; --old: #b3b5bc; --old-bg: #2b2d33; --info: #9cc3f2; --info-bg: #1b2b40;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--body); }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+header.top { padding-block: 20px 8px; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h1 { font: 700 30px/1.1 var(--display); letter-spacing: .02em; margin: 0; text-wrap: balance; }
+.updated { color: var(--muted); font-size: 14px; }
+.lead { color: var(--muted); margin: 6px 0 0; max-width: 65ch; font-size: 15px; }
+.newest { margin-top: 10px; font-size: 14px; display: flex; gap: 6px; flex-wrap: wrap; align-items: baseline; }
+.newest b { font-weight: 600; }
+
+.bar { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding: 10px 0 0; }
+.search { display: flex; gap: 8px; }
+.search input { flex: 1; min-width: 0; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-top: 8px; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs a { flex: none; text-decoration: none; color: var(--muted); font: 600 15px/1 var(--body); padding: 10px 12px 12px; border-bottom: 3px solid transparent; white-space: nowrap; }
+nav.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+nav.tabs a .n { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 4px; }
+
+main { padding-block: 16px 48px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.filters select { font: inherit; font-size: 14px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.filters label.toggle { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+.count { font-size: 14px; color: var(--muted); margin-left: auto; }
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 820px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card.target { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.card h2 { font: 700 21px/1.15 var(--display); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.card h2 .ver { font: 400 15px/1.3 var(--body); color: var(--muted); display: block; margin-top: 2px; letter-spacing: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip { font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--ink); white-space: nowrap; }
+.nick { font-size: 14px; color: var(--muted); font-style: italic; }
+.pill { font-size: 13px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.s-current { color: var(--ok); background: var(--ok-bg); }
+.s-slight-nerf { color: var(--warn); background: var(--warn-bg); }
+.s-partly-dead { color: var(--hot); background: var(--hot-bg); }
+.s-dead { color: var(--bad); background: var(--bad-bg); }
+.s-superseded { color: var(--old); background: var(--old-bg); }
+.s-unverified { color: var(--info); background: var(--info-bg); }
+.skills { font-weight: 600; font-size: 15px; }
+.text { margin: 0; max-width: 65ch; white-space: pre-line; }
+.small { font-size: 14px; color: var(--muted); margin: 0; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 14px; font-weight: 600; padding: 7px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); background: var(--bg); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.off { color: var(--muted); font-weight: 400; border-style: dashed; }
+.note { font-size: 14px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; }
+.empty { color: var(--muted); padding: 24px 0; }
+table.vids { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.vids td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.vids td.d { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; width: 1%; }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+footer { color: var(--muted); font-size: 13px; padding-block: 24px 40px; border-top: 1px solid var(--line); }
+@media (prefers-reduced-motion: no-preference) { .card.target { transition: box-shadow .3s; } }
+</style>
+</head>
+<body>
+<header class="top wrap">
+  <div class="brand"><h1>787prada Codex</h1><span class="updated" id="updated"></span></div>
+  <p class="lead">A community reference compiled from 787prada’s PoE2 build guides, mechanics breakdowns and strategy videos.</p>
+  <div class="newest" id="newest"></div>
+</header>
+<div class="bar">
+  <div class="wrap">
+    <div class="search"><label for="q" style="position:absolute;left:-9999px">Search</label><input id="q" type="search" placeholder="Search builds, skills, mechanics…" autocomplete="off"></div>
+    <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  </div>
+</div>
+<main class="wrap" id="main"></main>
+<footer class="wrap">Compiled from 787prada's videos. Status shows whether a build still works as covered; "Last checked" is the patch it was last confirmed on.<!--__DOWNLOAD__--></footer>
+<script>
+const DATA = /*__DATA__*/null;
+const V = Object.fromEntries(DATA.videos.map(v => [v.id, v]));
+const SECTIONS = [
+  ["builds", "Builds"], ["mechanics", "Mechanics"], ["changes", "Patch changes"],
+  ["toc", "Trial of Chaos"], ["mindset", "Mindset"], ["videos", "Videos"]];
+const state = { q: "", f: {}, hideOld: true };
+try { const s = localStorage.getItem("c787-hideOld"); if (s !== null) state.hideOld = s === "1"; } catch (e) {}
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const slug = s => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
+const has = (o, q) => !q || JSON.stringify(o).toLowerCase().includes(q);
+const watch = (id, label) => id && V[id] ? `<a class="btn primary" href="${esc(V[id].url)}" target="_blank" rel="noopener">▶ ${esc(label || "Watch")} <span style="opacity:.75;font-weight:400">${esc(id)}</span></a>` : "";
+
+document.getElementById("updated").textContent = "Updated " + fmtDate(DATA.updated);
+const nv = DATA.videos.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+document.getElementById("newest").innerHTML = `<b>Newest video:</b> <a href="${esc(nv.url)}" target="_blank" rel="noopener">${esc(nv.title)}</a>`;
+
+function tabs(active) {
+  const counts = { builds: DATA.builds.length, mechanics: DATA.mechanics.length, changes: DATA.changes.length, toc: DATA.toc.length, mindset: DATA.mindset.length, videos: DATA.videos.length };
+  document.getElementById("tabs").innerHTML = SECTIONS.map(([k, n]) =>
+    `<a href="#${k}" ${k === active ? 'aria-current="page"' : ""}>${n}<span class="n">${counts[k]}</span></a>`).join("");
+}
+function select(id, label, values) {
+  const cur = state.f[id] || "";
+  return `<label style="position:absolute;left:-9999px" for="f-${id}">${label}</label><select id="f-${id}" data-f="${id}"><option value="">${label}: all</option>${values.map(v => `<option ${v === cur ? "selected" : ""}>${esc(v)}</option>`).join("")}</select>`;
+}
+const uniq = (arr, k) => [...new Set(arr.map(x => x[k]).filter(Boolean))].sort();
+
+function viewBuilds(target) {
+  let list = DATA.builds.filter(b => has(b, state.q));
+  for (const [k, key] of [["cls", "cls"], ["asc", "asc"], ["status", "status"], ["patch", "patch"]]) if (state.f[k]) list = list.filter(b => b[key] === state.f[k]);
+  if (state.hideOld && !state.f.status && !target) list = list.filter(b => b.status !== "Superseded");
+  const html = list.map(b => `
+  <article class="card ${target === "build-" + b.id.toLowerCase() ? "target" : ""}" id="build-${b.id.toLowerCase()}">
+    <h2>${esc(b.name)}${b.version ? `<span class="ver">${esc(b.version)}</span>` : ""}</h2>
+    <div class="meta"><span class="pill s-${slug(b.status)}">${esc(b.status)}</span><span class="chip">${esc(b.cls)}</span><span class="chip">${esc(b.asc)}</span><span class="chip">Patch ${esc(b.patch)}</span>${b.nick ? `<span class="nick">“${esc(b.nick)}”</span>` : ""}</div>
+    <div class="skills">${esc(b.skills)}</div>
+    <p class="text">${esc(b.tech)}</p>
+    ${b.mech ? `<p class="small"><b>Mechanics used:</b> ${esc(b.mech)}</p>` : ""}
+    ${b.supersededBy ? `<p class="note">Newer version: ${esc(b.supersededBy)}</p>` : ""}
+    <div class="links">${watch(b.video, "Watch")}${b.ninja ? `<a class="btn" href="${esc(b.ninja)}" target="_blank" rel="noopener">poe.ninja ↗</a>` : (b.ninjaNote ? `<span class="btn off">poe.ninja: ${esc(b.ninjaNote.toLowerCase())}</span>` : "")}${b.moba ? `<a class="btn" href="${esc(b.moba)}" target="_blank" rel="noopener">Mobalytics ↗</a>` : ""}</div>
+    <p class="small">Last checked: patch ${esc(b.checked)}</p>
+  </article>`).join("");
+  return `<div class="filters">${select("cls", "Class", uniq(DATA.builds, "cls"))}${select("asc", "Ascendancy", uniq(DATA.builds, "asc"))}${select("status", "Status", uniq(DATA.builds, "status"))}${select("patch", "Patch", uniq(DATA.builds, "patch"))}
+  <label class="toggle"><input type="checkbox" id="hideOld" ${state.hideOld ? "checked" : ""}> Hide superseded versions</label><span class="count">${list.length} build${list.length === 1 ? "" : "s"}</span></div>
+  ${list.length ? `<div class="grid two">${html}</div>` : `<p class="empty">No builds match. Clear the search or filters.</p>`}`;
+}
+function viewMechanics() {
+  let list = DATA.mechanics.filter(m => has(m, state.q));
+  if (state.f.mtype) list = list.filter(m => m.type === state.f.mtype);
+  const html = list.map(m => `<article class="card" id="${m.id.toLowerCase()}">
+    <h2>${esc(m.name)}</h2>
+    <div class="meta"><span class="chip">${m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>${m.patch ? `<span class="chip">Patch ${esc(m.patch)}</span>` : ""}</div>
+    <p class="text">${esc(m.desc)}</p>
+    ${m.notes && !m.notesUrl ? `<p class="note">${esc(m.notes)}</p>` : ""}
+    <div class="links">${watch(m.video, "Watch")}${m.notesUrl ? `<a class="btn" href="${esc(m.notesUrl)}" target="_blank" rel="noopener">${esc(m.notes)}</a>` : ""}</div>
+    ${m.more ? `<p class="small">Also covered in: ${esc(m.more)}</p>` : ""}</article>`).join("");
+  return `<div class="filters">${select("mtype", "Type", ["Engine", "Tip"])}<span class="count">${list.length} entries</span></div>${list.length ? `<div class="grid two">${html}</div>` : `<p class="empty">Nothing matches that search.</p>`}`;
+}
+function viewChanges() {
+  const list = DATA.changes.filter(c => has(c, state.q));
+  return `<div class="grid">${list.map(c => `<article class="card"><h2>${esc(c.item)}</h2><div class="meta"><span class="chip">Patch ${esc(c.patch)}</span></div>
+    <p class="text">${esc(c.what)}</p><p class="small"><b>Affects:</b> ${esc(c.affects)}</p><p class="small">Source: ${esc(c.source)}</p>
+    <div class="links">${watch(c.video, "Watch")}</div></article>`).join("") || `<p class="empty">Nothing matches that search.</p>`}</div>`;
+}
+function viewToc() {
+  let list = DATA.toc.filter(t => has(t, state.q));
+  if (state.f.sec) list = list.filter(t => t.section === state.f.sec);
+  return `<div class="filters">${select("sec", "Section", uniq(DATA.toc, "section"))}<span class="count">Patch 0.5.5 · source ${watch("V32", "Watch")}</span></div>
+  <div class="grid two">${list.map(t => `<article class="card"><div class="meta"><span class="chip">${esc(t.section)}</span></div><h2>${esc(t.topic)}</h2><p class="text">${esc(t.note)}</p></article>`).join("") || `<p class="empty">Nothing matches that search.</p>`}</div>`;
+}
+function viewMindset() {
+  let list = DATA.mindset.filter(m => has(m, state.q));
+  if (state.f.cat) list = list.filter(m => m.cat === state.f.cat);
+  return `<div class="filters">${select("cat", "Category", uniq(DATA.mindset, "cat"))}<span class="count">${list.length} ideas</span></div>
+  <div class="grid two">${list.map(m => `<article class="card"><div class="meta"><span class="chip">${esc(m.cat)}</span></div><h2>${esc(m.title)}</h2><p class="text">${esc(m.text)}</p><div class="links">${watch(m.video, "Watch")}</div>${m.more ? `<p class="small">Also in: ${esc(m.more)}</p>` : ""}</article>`).join("") || `<p class="empty">Nothing matches that search.</p>`}</div>`;
+}
+function viewVideos() {
+  const list = DATA.videos.filter(v => has(v, state.q)).sort((a, b) => b.date.localeCompare(a.date));
+  return `<div class="tablewrap"><table class="vids"><tbody>${list.map(v => `<tr><td class="d">${esc(v.date)}</td><td><a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.title)}</a><div class="meta" style="margin-top:4px"><span class="chip">${esc(v.type)}</span><span class="chip">${esc(v.patch)}</span><span class="chip">${esc(v.id)}</span></div></td></tr>`).join("")}</tbody></table></div>`;
+}
+function render() {
+  const h = location.hash.slice(1);
+  const target = h.startsWith("build-") ? h : null;
+  const sec = target ? "builds" : (SECTIONS.find(s => s[0] === h) ? h : "builds");
+  tabs(sec);
+  const views = { builds: () => viewBuilds(target), mechanics: viewMechanics, changes: viewChanges, toc: viewToc, mindset: viewMindset, videos: viewVideos };
+  document.getElementById("main").innerHTML = views[sec]();
+  document.querySelectorAll("[data-f]").forEach(el => el.addEventListener("change", e => { state.f[e.target.dataset.f] = e.target.value; render(); }));
+  const ho = document.getElementById("hideOld");
+  if (ho) ho.addEventListener("change", e => { state.hideOld = e.target.checked; try { localStorage.setItem("c787-hideOld", state.hideOld ? "1" : "0"); } catch (err) {} render(); });
+  if (target) { const el = document.getElementById(target); if (el) el.scrollIntoView({ block: "center" }); }
+}
+document.getElementById("q").addEventListener("input", e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+window.addEventListener("hashchange", () => { state.f = {}; render(); });
+render();
+</script>
+</body>
+</html>
