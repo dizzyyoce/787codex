@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Watch from "../../components/Watch.astro";
+import BuildTags from "../../components/BuildTags.astro";
 import { DATA, B, M, V, url, buildUrl, mechUrl, statusClass, short } from "../../lib/data.js";
 
 export function getStaticPaths() {
@@ -19,10 +20,7 @@ const video = b.video ? V[b.video] : null;
       <h1 class="dtitle">{b.name}</h1>
       {b.version && <div class="ver">{b.version}</div>}
       <div class="meta">
-        <span class={"pill " + statusClass(b.status)}>{b.status}</span>
-        <a class="chip" href={url("builds/?cls=" + encodeURIComponent(b.cls))}>{b.cls}</a>
-        <a class="chip" href={url("builds/?asc=" + encodeURIComponent(b.asc))}>{b.asc}</a>
-        <span class="chip">Patch {b.patch}</span>
+        <BuildTags b={b} />
         {b.nick && <span class="nick">“{b.nick}”</span>}
       </div>
       {newer && <p class="note">There’s a newer version: <a href={buildUrl(newer)} data-hc={"b:" + newer.id}>{newer.name}{newer.version ? ` (${newer.version})` : ""}</a></p>}

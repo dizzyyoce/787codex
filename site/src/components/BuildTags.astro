@@ -1,0 +1,14 @@
+---
+// A build's status, class, ascendancy and patch as tags. Hover shows the other builds
+// with the same tag; click opens the Builds page filtered to it.
+import { url, statusClass } from "../lib/data.js";
+const { b } = Astro.props;
+const tag = (field, value) => ({
+  href: url(`builds/?${field}=${encodeURIComponent(value)}`),
+  "data-hc": `tag:${field}:${value}`,
+});
+---
+<a class={"pill tag " + statusClass(b.status)} {...tag("status", b.status)}>{b.status}</a>
+<a class="chip tag" {...tag("cls", b.cls)}>{b.cls}</a>
+<a class="chip tag" {...tag("asc", b.asc)}>{b.asc}</a>
+<a class="chip tag" {...tag("patch", b.patch)}>Patch {b.patch}</a>

@@ -12,6 +12,24 @@ let showTimer = null;
 let hideTimer = null;
 let z = 60;
 
+const TAG_LABEL = { status: "Status", cls: "Class", asc: "Ascendancy", patch: "Patch" };
+const STATUS_ORDER = ["Current", "Slight Nerf", "Unverified", "Partly Dead", "Dead", "Superseded"];
+
+// "tag:cls:Mercenary" -> a card listing every build with that tag
+function tagItem(key, items, a) {
+  const rest = key.slice(4), i = rest.indexOf(":");
+  const field = rest.slice(0, i), value = rest.slice(i + 1);
+  const rank = (b) => { const r = STATUS_ORDER.indexOf(b.status); return r < 0 ? 99 : r; };
+  const list = items.filter((it) => it.type === "Build" && String(it[field]) === value).sort((x, y) => rank(x) - rank(y));
+  const detail = field === "cls" ? (b) => b.asc : field === "asc" ? (b) => "Patch " + b.patch : (b) => b.cls + " · " + b.asc;
+  return {
+    type: "Tag · " + TAG_LABEL[field], title: field === "patch" ? "Patch " + value : value,
+    sub: (() => { const old = list.filter((b) => b.status === "Superseded").length;
+      return `${list.length} build${list.length === 1 ? "" : "s"}${old && field !== "status" ? ` (${old} superseded)` : ""}`; })(), url: a.getAttribute("href"), urlLabel: "Show on Builds page →",
+    list: list.map((b) => ({ title: b.title, url: b.url, status: b.status, detail: detail(b) })),
+  };
+}
+
 function render(it, isPinned) {
   return `
     <div class="hc-head">
@@ -26,8 +44,9 @@ function render(it, isPinned) {
     <div class="meta">${it.status ? `<span class="pill ${statusClass(it.status)}">${esc(it.status)}</span>` : ""}<span class="small">${esc(it.sub || "")}</span></div>
     ${it.skills ? `<div class="skills">${esc(it.skills)}</div>` : ""}
     ${it.body ? `<p class="text hc-body">${esc(it.body)}</p>` : ""}
+    ${it.list ? `<ul class="hc-list">${it.list.map((b) => `<li><a href="${esc(b.url)}">${esc(b.title)}</a><span class="pill ${statusClass(b.status)}">${esc(b.status)}</span><span class="small">${esc(b.detail)}</span></li>`).join("")}</ul>` : ""}
     <div class="hc-links">
-      ${it.url && !it.external ? `<a class="btn" href="${esc(it.url)}">Open page →</a>` : ""}
+      ${it.url && !it.external ? `<a class="btn" href="${esc(it.url)}">${esc(it.urlLabel || "Open page →")}</a>` : ""}
       ${it.video ? `<a class="btn primary" href="${esc(it.video)}" target="_blank" rel="noopener">▶ Watch</a>` : ""}
       ${it.ninja ? `<a class="btn" href="${esc(it.ninja)}" target="_blank" rel="noopener">poe.ninja ↗</a>` : ""}
     </div>
@@ -44,8 +63,9 @@ function place(el, r) {
 }
 
 async function show(a) {
-  const { byKey } = await loadIndex();
-  const it = byKey[a.dataset.hc];
+  const { items, byKey } = await loadIndex();
+  const key = a.dataset.hc;
+  const it = key.startsWith("tag:") ? tagItem(key, items, a) : byKey[key];
   if (!it || link !== a) return;
   item = it;
   card.innerHTML = render(it, false);

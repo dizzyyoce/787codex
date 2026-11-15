@@ -8,7 +8,7 @@ export function GET() {
   for (const b of DATA.builds) {
     items.push({
       k: "b:" + b.id, type: "Build", title: b.name + (b.version ? ` (${b.version})` : ""), url: buildUrl(b),
-      sub: [b.cls, b.asc, "Patch " + b.patch].join(" · "), status: b.status, skills: b.skills,
+      sub: [b.cls, b.asc, "Patch " + b.patch].join(" · "), status: b.status, cls: b.cls, asc: b.asc, patch: b.patch, skills: b.skills,
       body: b.tech, video: vid(b.video), ninja: b.ninja || undefined,
       text: [b.name, b.version, b.nick, b.cls, b.asc, b.skills, b.tech, b.mech].filter(Boolean).join(" "),
     });
