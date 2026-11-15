@@ -11,13 +11,13 @@ const { m } = Astro.props;
 const usedBy = DATA.builds.filter((b) => b.mechIds.includes(m.id));
 const more = m.more.map((id) => V[id]).filter(Boolean);
 ---
-<Base title={m.name} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
+<Base title={m.head} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
   <div class="detail">
     <div class="crumbs"><a href={url("mechanics/")}>Mechanics</a> › {m.type}</div>
     <div class="dgrid text-first">
     <VideoPanel main={m.video} more={m.more} />
     <article class="card">
-      <div class="dhead"><h1 class="dtitle">{m.name}</h1><button type="button" class="star big" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
+      <div class="dhead"><h1 class="dtitle">{m.head}</h1><button type="button" class="star big" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
       <div class="meta"><span class={tagClass("mtype", m.type)}>{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
       <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
