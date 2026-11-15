@@ -17,7 +17,7 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
     <div class="dgrid text-first">
     <VideoPanel main={m.video} more={m.more} />
     <article class="card">
-      <h1 class="dtitle">{m.name}</h1>
+      <div class="dhead"><h1 class="dtitle">{m.name}</h1><button type="button" class="star big" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
       <div class="meta"><span class={tagClass("mtype", m.type)}>{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
       <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}

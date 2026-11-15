@@ -1,6 +1,7 @@
 // Per-reader features, remembered in this browser only (nothing is sent anywhere):
 // - "New" badges on builds and videos added since the reader's last visit
-// - favourite builds (☆ buttons), a "Your favourites" list on the home page
+// - favourites (☆ buttons on builds, mechanics, patch changes, Trial of Chaos notes, mindset ideas
+//   and videos), a "Your favourites" list on the home page
 import { loadIndex, esc, statusClass } from "./index.js";
 
 const store = {
@@ -76,12 +77,14 @@ async function paintHome() {
   const ids = favs();
   if (!ids.length) { box.hidden = true; return; }
   const { byKey } = await loadIndex();
-  const list = ids.map((id) => byKey["b:" + id]).filter(Boolean);
-  box.querySelector(".favlist").innerHTML = list.map((b) => `
-    <li><a href="${esc(b.url)}" data-hc="${esc(b.k)}">${esc(b.title)}</a>
-      <span class="pill ${statusClass(b.status)}">${esc(b.status)}</span>
-      <span class="small">${esc(b.sub)}</span>
-      <button type="button" class="star" data-fav="${esc(b.k.slice(2))}" aria-pressed="true">★</button></li>`).join("");
+  // builds first (saved as bare IDs), then everything else in the order it was starred
+  const list = ids.map((id) => [id, byKey[id.includes(":") ? id : "b:" + id]]).filter(([, it]) => it)
+    .sort(([a], [b]) => (a.includes(":") ? 1 : 0) - (b.includes(":") ? 1 : 0));
+  box.querySelector(".favlist").innerHTML = list.map(([id, it]) => `
+    <li><a href="${esc(it.url)}"${it.external ? ' target="_blank" rel="noopener"' : ""}${/^[bm]:/.test(it.k) ? ` data-hc="${esc(it.k)}"` : ""}>${esc(it.title)}${it.external ? " ↗" : ""}</a>
+      ${it.status ? `<span class="pill ${statusClass(it.status)}">${esc(it.status)}</span>` : `<span class="chip">${esc(it.type)}</span>`}
+      <span class="small">${esc(it.sub)}</span>
+      <button type="button" class="star" data-fav="${esc(id)}" aria-pressed="true">★</button></li>`).join("");
   box.hidden = !list.length;
   paintStars();
 }
