@@ -6,5 +6,5 @@ export default defineConfig({
   site: "https://dizzyyoce.github.io",
   base: process.env.SITE_BASE ?? "/787codex/",
   trailingSlash: "always",
-  build: { format: "directory" },
+  build: { format: "directory", assets: "assets" },
 });
