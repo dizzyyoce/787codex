@@ -11,7 +11,7 @@ import "../styles/extra.css";
 import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
 import { GOATCOUNTER } from "../lib/config.js";
 
-const { title, description, section, compactHeader = true, image = "og/default.png" } = Astro.props;
+const { title, description, section, compactHeader = true, image = "og/default.png", noindex = false } = Astro.props;
 const fullTitle = title ? `${title} · 787prada Codex` : "787prada Codex";
 const desc = description || "A community reference compiled from 787prada’s PoE2 build guides, mechanics breakdowns and strategy videos.";
 const nv = newestVideos(1)[0];
@@ -24,7 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{fullTitle}</title>
 <meta name="description" content={desc}>
-<link rel="canonical" href={canonical}>
+{noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
 <meta property="og:type" content="website">
 <meta property="og:title" content={fullTitle}>
 <meta property="og:description" content={desc}>
