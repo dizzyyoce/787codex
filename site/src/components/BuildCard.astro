@@ -1,6 +1,7 @@
 ---
-import { buildUrl, statusClass } from "../lib/data.js";
+import { buildUrl } from "../lib/data.js";
 import Watch from "./Watch.astro";
+import BuildTags from "./BuildTags.astro";
 const { b } = Astro.props;
 ---
 <article class="card" data-row
@@ -8,8 +9,7 @@ const { b } = Astro.props;
   data-text={[b.name, b.version, b.nick, b.cls, b.asc, b.skills, b.tech, b.mech].filter(Boolean).join(" ").toLowerCase()}>
   <h2><a class="title" href={buildUrl(b)} data-hc={"b:" + b.id}>{b.name}</a>{b.version && <span class="ver">{b.version}</span>}</h2>
   <div class="meta">
-    <span class={"pill " + statusClass(b.status)}>{b.status}</span>
-    <span class="chip">{b.cls}</span><span class="chip">{b.asc}</span><span class="chip">Patch {b.patch}</span>
+    <BuildTags b={b} />
     {b.nick && <span class="nick">“{b.nick}”</span>}
   </div>
   <div class="skills">{b.skills}</div>
