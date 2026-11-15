@@ -1,0 +1,44 @@
+---
+// Shown by GitHub Pages for any address that doesn't exist. Suggests the closest
+// builds and mechanics based on the words in the address.
+import Base from "../layouts/Base.astro";
+import { SECTIONS, url } from "../lib/data.js";
+---
+<Base title="Page not found" noindex>
+  <div class="detail">
+    <article class="card nf">
+      <h1 class="dtitle">Page not found</h1>
+      <p class="text">That link doesn't match a page in the Codex. It may be an old link, or the build may have been renamed.</p>
+      <div id="nf-guess" hidden>
+        <h3>Did you mean</h3>
+        <ul class="related" id="nf-list"></ul>
+      </div>
+      <p class="text">Try the search box above, or go to a section:</p>
+      <div class="meta">{SECTIONS.map((s) => <a class="chip tag" href={url(s.path)}>{s.label}</a>)}</div>
+      <p><a class="btn" href={url()}>← Home</a></p>
+    </article>
+  </div>
+  <script>
+    import { loadIndex, esc, statusClass } from "../scripts/index.js";
+    // words from the missing address, e.g. /builds/abysal-lich-twister/ -> "abysal lich twister"
+    const words = decodeURIComponent(location.pathname.split("/").filter(Boolean).pop() || "")
+      .toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 3 && !["builds", "mechanics", "787codex", "html"].includes(w));
+    if (words.length) {
+      loadIndex().then(({ items }) => {
+        const scored = items.filter((it) => !it.external && it.type !== "Patch change")
+          .map((it) => {
+            const hit = (list) => words.filter((w) => list.some((x) => x.startsWith(w) || (x.length > 3 && w.startsWith(x)))).length;
+            const inTitle = hit(it._tw), inAll = hit(it._w);
+            return [inTitle * 3 + inAll, it, inTitle];
+          })
+          // most of the address's words should be in the title
+          .filter(([, , inTitle]) => inTitle >= Math.min(2, words.length))
+          .sort((a, b) => b[0] - a[0]).slice(0, 5);
+        if (!scored.length) return;
+        document.getElementById("nf-list").innerHTML = scored.map(([, it]) =>
+          `<li><a href="${esc(it.url)}">${esc(it.title)}</a> ${it.status ? `<span class="pill ${statusClass(it.status)}">${esc(it.status)}</span>` : ""}<span class="small">${esc(it.type)}</span></li>`).join("");
+        document.getElementById("nf-guess").hidden = false;
+      });
+    }
+  </script>
+</Base>
