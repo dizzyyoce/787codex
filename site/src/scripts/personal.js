@@ -52,6 +52,11 @@ if (since) {
   });
 }
 
+// ---- Offline copy (service worker) --------------------------------------------
+if ("serviceWorker" in navigator && document.body.dataset.sw && (location.protocol === "https:" || location.hostname === "localhost")) {
+  addEventListener("load", () => navigator.serviceWorker.register(document.body.dataset.sw).catch(() => {}));
+}
+
 // ---- Favourites ----------------------------------------------------------------
 const favs = () => store.get("c787-favs", []);
 

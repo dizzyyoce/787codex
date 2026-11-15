@@ -28,11 +28,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content={new URL(url(image), Astro.site)}>
 <link rel="icon" href={url("logo.jpg")}>
+<link rel="manifest" href={url("manifest.webmanifest")}>
+<link rel="apple-touch-icon" href={url("icon-192.png")}>
+<meta name="theme-color" content="#15161a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
-<body data-base={url()}>
+<body data-base={url()} data-sw={url("sw.js")}>
 <header class={"top wrap" + (compactHeader ? " compact" : "")}>
  <div class="intro">
   <div class="brand"><a class="home" href={url()}><h1>787prada Codex</h1></a><span class="updated">Updated {fmtDate(DATA.updated)}</span></div>
