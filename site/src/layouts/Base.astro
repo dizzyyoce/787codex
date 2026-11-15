@@ -59,9 +59,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 </header>
 <div class="bar">
   <div class="wrap">
-    <button class="searchbtn" type="button" data-open-palette aria-label="Search the Codex">
-      <span>Search builds, skills, mechanics…</span><kbd class="hide-touch">/</kbd>
-    </button>
+    <div class="search" id="search">
+      <label for="pq" style="position:absolute;left:-9999px">Search the Codex</label>
+      <input id="pq" type="search" placeholder="Search builds, skills, mechanics…" autocomplete="off" spellcheck="false"
+        role="combobox" aria-expanded="false" aria-controls="pres" aria-autocomplete="list">
+      <kbd class="hide-touch skey">/</kbd>
+      <div class="sdrop" id="palette" hidden>
+        <div class="sres">
+          <ul id="pres" role="listbox" aria-label="Search results"></ul>
+          <div class="palette-foot hide-touch"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd> new tab</span><span><kbd>Esc</kbd> close</span></div>
+        </div>
+        <div class="sprev" id="sprev" aria-live="polite"></div>
+      </div>
+    </div>
     <nav class="tabs" aria-label="Sections">
       {SECTIONS.map((s) => (
         <a href={url(s.path)} data-tab={s.key} aria-current={s.key === section ? "page" : undefined}>{s.label}<span class="n">{s.count}</span></a>
@@ -78,17 +88,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <span class="hide-touch"> Press <kbd>/</kbd> to search.</span>
 </footer>
 
-<div class="palette" id="palette" hidden>
-  <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search">
-    <div class="palette-head">
-    <input id="pq" type="search" placeholder="Search builds, skills, mechanics, videos…" autocomplete="off" spellcheck="false"
-      role="combobox" aria-expanded="true" aria-controls="pres" aria-autocomplete="list">
-    <button type="button" class="palette-close" data-close-palette>Close</button>
-    </div>
-    <ul id="pres" role="listbox"></ul>
-    <div class="palette-foot hide-touch"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd> new tab</span><span><kbd>Esc</kbd> close</span></div>
-  </div>
-</div>
 <div class="hovercard" id="hovercard" hidden></div>
 
 <script>
