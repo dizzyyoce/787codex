@@ -2,7 +2,7 @@
 import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import VideoPanel from "../../components/VideoPanel.astro";
-import { DATA, V, url, buildUrl, statusClass, short } from "../../lib/data.js";
+import { DATA, V, url, buildUrl, statusClass, short, tagClass } from "../../lib/data.js";
 
 export function getStaticPaths() {
   return DATA.mechanics.map((m) => ({ params: { slug: m.slug }, props: { m } }));
@@ -18,7 +18,7 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
     <VideoPanel main={m.video} more={m.more} />
     <article class="card">
       <h1 class="dtitle">{m.name}</h1>
-      <div class="meta"><span class="chip">{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
+      <div class="meta"><span class={tagClass("mtype", m.type)}>{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
       <Linked text={m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
       {m.notesUrl && <div class="links"><a class="btn" href={m.notesUrl} target="_blank" rel="noopener">{m.notes} ↗</a></div>}

@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Watch from "../components/Watch.astro";
 import Filters from "../components/Filters.astro";
-import { DATA } from "../lib/data.js";
+import { DATA, tagClass } from "../lib/data.js";
 const sections = [...new Set(DATA.toc.map((t) => t.section).filter(Boolean))].sort();
 const vids = [...new Set(DATA.toc.map((t) => t.video).filter(Boolean))];
 ---
@@ -11,7 +11,7 @@ const vids = [...new Set(DATA.toc.map((t) => t.video).filter(Boolean))];
   <p class="small" style="margin:-4px 0 12px">Source: {vids.map((v) => <Watch id={v} />)}</p>
   <div class="grid two">{DATA.toc.map((t, i) => (
     <article class="card" data-row data-section={t.section} id={"t" + (i + 1)}>
-      <div class="meta"><span class="chip">{t.section}</span>{t.patch && <span class="chip">Patch {t.patch}</span>}</div>
+      <div class="meta"><span class={tagClass("sec", t.section)}>{t.section}</span>{t.patch && <span class="chip">Patch {t.patch}</span>}</div>
       <h2>{t.topic}</h2><p class="text">{t.note}</p>
     </article>))}</div>
   <p class="empty" hidden>Nothing matches that filter.</p>

@@ -14,6 +14,8 @@ export const mechUrl = (m) => url(`mechanics/${m.slug}/`);
 
 export const slug = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
 export const statusClass = (s) => "s-" + slug(s);
+/** Colour class for a dropdown value (field: mtype, mcat, sec, vtype); colours match the workbook. */
+export const tagClass = (field, v) => "chip k-" + field + "-" + slug(v);
 export const fmtDate = (d) =>
   new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
 
