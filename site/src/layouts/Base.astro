@@ -8,7 +8,7 @@ import "@fontsource/source-sans-3/600.css";
 import "@fontsource/source-sans-3/700.css";
 import "../styles/base.css";
 import "../styles/extra.css";
-import { DATA, SECTIONS, url, fmtDate, newestVideos } from "../lib/data.js";
+import { DATA, SECTIONS, url, fmtDate, newestVideos, ytId } from "../lib/data.js";
 import { GOATCOUNTER } from "../lib/config.js";
 
 const { title, description, section, compactHeader = true, image = "og/default.png", noindex = false } = Astro.props;
@@ -48,6 +48,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   {!compactHeader && <p class="lead">{desc}</p>}
   {!compactHeader && <div class="newest"><b>Newest video:</b> <a href={nv.url} target="_blank" rel="noopener">{nv.title}</a></div>}
  </div>
+ {!compactHeader && ytId(nv.url) && (
+ <a class="nv-thumb" href={nv.url} target="_blank" rel="noopener" aria-label={`Watch the newest video: ${nv.title}`}>
+  <img src={`https://i.ytimg.com/vi/${ytId(nv.url)}/mqdefault.jpg`} alt="" width="320" height="180">
+  <span class="nv-play" aria-hidden="true">▶</span>
+ </a>)}
  <div class="side">
   <a href={url()}><img class="logo" src={url("logo.jpg")} alt="787prada" width="150" height="120"></a>
   {!compactHeader && (
