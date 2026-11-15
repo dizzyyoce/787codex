@@ -160,3 +160,34 @@ header.top:not(.compact) { grid-template-columns: auto 1fr auto; }
 .nv-thumb:hover .nv-play, .nv-thumb:focus-visible .nv-play { background: var(--accent); }
 @media (max-width: 900px) { .nv-thumb { width: 220px; } }
 @media (max-width: 720px) { header.top:not(.compact) { grid-template-columns: 1fr auto; } .nv-thumb { display: none; } }
+
+/* Type / category / section tags: same colour-blind-safe colours as the workbook dropdowns.
+   Values with no colour (Mindset category, General guidance, Content Guide) keep the plain chip. */
+:root {
+  --k-orange: #6b4a00; --k-orange-bg: #f4d48c;
+  --k-sky: #1f5878; --k-sky-bg: #cce8f8;
+  --k-sky2: #154e70; --k-sky2-bg: #abdaf4;
+  --k-blue: #0b3550; --k-blue-bg: #73b1d5;
+  --k-amber: #6e3300; --k-amber-bg: #ecb78c;
+  --k-yellow: #5e5300; --k-yellow-bg: #f8f2a0;
+  --k-pink: #6a2a52; --k-pink-bg: #e3b5cf;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --k-orange: #f2c46a; --k-orange-bg: #3e2e10; --k-sky: #b9ddf3; --k-sky-bg: #1a2c38; --k-sky2: #a9d6f2; --k-sky2-bg: #1b3446;
+    --k-blue: #d6ecfa; --k-blue-bg: #18486a; --k-amber: #f3a876; --k-amber-bg: #4a2a14; --k-yellow: #efe48a; --k-yellow-bg: #38341a;
+    --k-pink: #e9a9cc; --k-pink-bg: #3a1f2e;
+  }
+}
+:root[data-theme="dark"] {
+  --k-orange: #f2c46a; --k-orange-bg: #3e2e10; --k-sky: #b9ddf3; --k-sky-bg: #1a2c38; --k-sky2: #a9d6f2; --k-sky2-bg: #1b3446;
+  --k-blue: #d6ecfa; --k-blue-bg: #18486a; --k-amber: #f3a876; --k-amber-bg: #4a2a14; --k-yellow: #efe48a; --k-yellow-bg: #38341a;
+  --k-pink: #e9a9cc; --k-pink-bg: #3a1f2e;
+}
+.k-mtype-engine, .k-mcat-core-principle, .k-sec-wagers { color: var(--k-orange); background: var(--k-orange-bg); }
+.k-mtype-tip, .k-vtype-build-guide { color: var(--k-sky); background: var(--k-sky-bg); }
+.k-mcat-how-to, .k-sec-modifiers { color: var(--k-sky2); background: var(--k-sky2-bg); }
+.k-vtype-build-update { color: var(--k-blue); background: var(--k-blue-bg); }
+.k-vtype-patch-review { color: var(--k-amber); background: var(--k-amber-bg); }
+.k-vtype-mechanics { color: var(--k-yellow); background: var(--k-yellow-bg); }
+.k-vtype-mindset { color: var(--k-pink); background: var(--k-pink-bg); }
