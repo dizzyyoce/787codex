@@ -101,5 +101,11 @@ document.addEventListener("click", (e) => {
   document.dispatchEvent(new CustomEvent("c787:favs"));
 });
 
+// Keep every page in step with favourites changed elsewhere: a page brought back with the
+// Back/Forward buttons is restored as it was left, and another open tab doesn't reload.
+const refresh = () => { paintStars(); paintHome(); document.dispatchEvent(new CustomEvent("c787:favs")); };
+addEventListener("pageshow", (e) => { if (e.persisted) refresh(); });
+addEventListener("storage", (e) => { if (e.key === "c787-favs") refresh(); });
+
 paintStars();
 paintHome();
