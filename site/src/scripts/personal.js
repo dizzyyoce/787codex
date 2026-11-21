@@ -1,5 +1,5 @@
 // Per-reader features, remembered in this browser only (nothing is sent anywhere):
-// - "New" badges on builds and videos added since the reader's last visit
+// - "New" badges on builds added since the reader's last visit (not on videos: the Videos tab is an index)
 // - favourites (☆ buttons on builds, mechanics, patch changes, Trial of Chaos notes, mindset ideas
 //   and videos), a "Your favourites" list on the home page
 import { loadIndex, esc, statusClass } from "./index.js";
@@ -31,18 +31,17 @@ function badge(el) {
   b.className = "newbadge";
   b.textContent = "New";
   b.title = "Added since your last visit";
-  // build cards: inside the title; build page: inside the h1; video rows: after the link
+  // build cards: inside the title; build page: inside the h1
   const h = el.matches("h1") ? el : el.querySelector("h2");
   if (h) h.append(b);
-  else el.querySelector("td a")?.after(b);
 }
 
 if (since) {
-  document.querySelectorAll("[data-date]").forEach((el) => { if (isNew(el.dataset.date)) badge(el); });
+  // Video rows (Videos tab, home page's Newest videos) carry data-date too but get no badge.
+  document.querySelectorAll("[data-date]:not(tr)").forEach((el) => { if (isNew(el.dataset.date)) badge(el); });
   loadIndex().then(({ items }) => {
     const counts = {
       builds: items.filter((i) => i.type === "Build" && isNew(i.date)).length,
-      videos: items.filter((i) => i.type === "Video" && isNew(i.date)).length,
     };
     for (const [k, n] of Object.entries(counts)) {
       const tab = document.querySelector(`[data-tab="${k}"]`);
