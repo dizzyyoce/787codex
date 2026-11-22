@@ -194,3 +194,38 @@ header.top:not(.compact) { grid-template-columns: auto 1fr auto; }
 
 /* favourite star in the videos table */
 table.vids td.f { width: 1%; padding: 4px 0 4px 4px; }
+
+/* Title lists (Mindset, Trial of Chaos, Patch Changes, Mechanics): one line per entry, stacked.
+   Mindset, Trial of Chaos and Patch Changes open in place; Mechanics titles go to the mechanic's page. */
+.acc { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.acc-item { position: relative; scroll-margin-top: 120px; }
+.acc-item + .acc-item { border-top: 1px solid var(--line); }
+.acc-item[hidden] { display: none; }
+.acc-item > .star { position: absolute; top: 8px; right: 8px; }
+.acc-item summary, .acc-item .acc-line { list-style: none; display: flex; align-items: center; gap: 10px; padding: 11px 48px 11px 16px; min-height: 48px; font: 700 19px/1.2 var(--display); letter-spacing: .01em; }
+.acc-item summary { cursor: pointer; }
+.acc-item summary::-webkit-details-marker { display: none; }
+.acc-item summary::before { content: "+"; flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--chip); color: var(--accent); font: 700 16px/1 var(--body); }
+.acc-item details[open] > summary::before { content: "−"; }
+.acc-item summary:hover, .acc-item .acc-line a.title:hover { color: var(--accent); }
+.acc-item .acc-line a.title { color: inherit; text-decoration: none; }
+.acc-item summary .chip, .acc-item .acc-line .chip { font: 400 13px/1.4 var(--body); letter-spacing: 0; margin-left: auto; }
+.acc-item:target { box-shadow: inset 3px 0 0 var(--accent); }
+.acc-body { padding: 0 16px 16px 48px; display: flex; flex-direction: column; gap: 8px; }
+.acc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.acc-tools .jumps { display: flex; flex-wrap: wrap; gap: 6px; }
+.acc-tools .jumps a { text-decoration: none; }
+.acc-tools button.btn { font-family: var(--body); cursor: pointer; }
+.acc-group[hidden] { display: none; }
+h2.section.grp { display: flex; align-items: center; gap: 10px; scroll-margin-top: 120px; }
+h2.section.grp .chip, h2.section.grp .n { font: 400 14px/1.4 var(--body); letter-spacing: 0; }
+h2.section.grp .n { color: var(--muted); }
+@media (max-width: 520px) { .acc-body { padding-left: 16px; } .acc-item summary, .acc-item .acc-line { font-size: 18px; } }
+
+/* Home page table of contents */
+.toc-row { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; }
+.toc-row + .toc-row { border-top: 1px solid var(--line); }
+.toc-row > a.toc-title { font: 700 26px/1.1 var(--display); letter-spacing: .02em; align-self: flex-start; text-underline-offset: 4px; text-decoration-thickness: 2px; }
+.toc-row > a.toc-title .n { font: 400 14px/1 var(--body); color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.toc-row p { margin: 0; font-size: 15px; max-width: 75ch; }
+.toc-row .quick { font-size: 14px; color: var(--muted); }
