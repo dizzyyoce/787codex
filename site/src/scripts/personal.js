@@ -33,7 +33,18 @@ if (!visit || typeof visit.at !== "number" || now - visit.at > VISIT_GAP_H * 36e
 visit.at = now;
 ss.set("c787-visit", JSON.stringify(visit));
 const since = visit.since;
-const isNew = (d) => !!since && !!d && d > since && d >= cutoff;
+const isRecent = (d) => !!since && !!d && d > since && d >= cutoff;
+
+// Opening a build's page marks it as seen: its badge shows on that page this once, then
+// nowhere else. Seen builds are kept only while they could still count as new.
+const seen = {};
+for (const [id, d] of Object.entries(store.get("c787-seen", {}) || {})) if (d >= cutoff) seen[id] = d;
+const pageTitle = document.querySelector("h1[data-date]");
+const pageId = pageTitle && pageTitle.closest(".dhead")?.querySelector("[data-fav]")?.dataset.fav;
+const pageWasNew = !!pageId && !seen[pageId] && isRecent(pageTitle.dataset.date);
+if (pageWasNew) seen[pageId] = pageTitle.dataset.date;
+store.set("c787-seen", seen);
+const isNew = (d, id) => isRecent(d) && (!seen[id] || (id === pageId && pageWasNew));
 
 function badge(el) {
   if (el.querySelector(".newbadge")) return;
@@ -48,10 +59,13 @@ function badge(el) {
 
 if (since) {
   // Video rows (Videos tab, home page's Newest videos) carry data-date too but get no badge.
-  document.querySelectorAll("[data-date]:not(tr)").forEach((el) => { if (isNew(el.dataset.date)) badge(el); });
+  document.querySelectorAll("[data-date]:not(tr)").forEach((el) => {
+    const id = el.dataset.id || el.closest(".dhead")?.querySelector("[data-fav]")?.dataset.fav;
+    if (isNew(el.dataset.date, id)) badge(el);
+  });
   loadIndex().then(({ items }) => {
     const counts = {
-      builds: items.filter((i) => i.type === "Build" && isNew(i.date)).length,
+      builds: items.filter((i) => i.type === "Build" && isNew(i.date, i.k.slice(2)) && i.k.slice(2) !== pageId).length,
     };
     for (const [k, n] of Object.entries(counts)) {
       const tab = document.querySelector(`[data-tab="${k}"]`);
