@@ -1,0 +1,36 @@
+---
+import Base from "../../layouts/Base.astro";
+import Watch from "../../components/Watch.astro";
+import Filters from "../../components/Filters.astro";
+import { DATA, tagClass, byVideoDate, mindUrl } from "../../lib/data.js";
+const list = byVideoDate(DATA.mindset.map((m, i) => ({ ...m, anchor: "p" + (i + 1) })));
+const ORDER = ["Core Principle", "How-To", "Mindset"];
+const present = [...new Set(DATA.mindset.map((m) => m.cat).filter(Boolean))];
+const cats = [...ORDER.filter((c) => present.includes(c)), ...present.filter((c) => !ORDER.includes(c)).sort()];
+const groups = cats.map((c) => ({ cat: c, id: "cat-" + c.toLowerCase().replace(/[^a-z0-9]+/g, "-"), items: list.filter((m) => m.cat === c) }));
+---
+<Base title="Mindset" section="mindset" description="How 787prada thinks about Path of Exile 2: core principles and how-tos.">
+  <Filters noun="ideas" favs placeholder="Filter mindset ideas…" fields={[{ key: "cat", label: "Category", values: [...cats].sort() }]} />
+  <div class="acc-tools">
+    <div class="links"><button type="button" class="btn" data-acc-all="open">Open all</button><button type="button" class="btn" data-acc-all="close">Close all</button></div>
+  </div>
+  {groups.map((g) => (
+    <section class="acc-group" data-group>
+      <h2 class="section grp" id={g.id}><span class={tagClass("mcat", g.cat)}>{g.cat}</span><span class="n">{g.items.length}</span></h2>
+      <div class="acc">{g.items.map((m) => (
+        <div class="acc-item" data-row data-id={m.fav} data-cat={m.cat} id={m.anchor}>
+          <details>
+            <summary>{m.head}</summary>
+            <div class="acc-body">
+              <p class="text">{m.text}</p>
+              <div class="links"><Watch id={m.video} /><a class="more-link" href={mindUrl(m)}>Read full description →</a></div>
+              {m.more.length > 0 && <p class="small">Also in: {m.more.join(", ")}</p>}
+            </div>
+          </details>
+          <button type="button" class="star" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
+        </div>))}
+      </div>
+    </section>))}
+  <p class="empty" hidden>Nothing matches that filter.</p>
+  <script>import "../../scripts/acc.js";</script>
+</Base>

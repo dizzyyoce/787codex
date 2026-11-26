@@ -27,6 +27,8 @@ if (root) {
       c.hidden = !ok;
       if (ok) n++;
     }
+    // Grouped lists: hide a group's heading and box when none of its entries match.
+    document.querySelectorAll("[data-group]").forEach((g) => { g.hidden = !g.querySelector("[data-row]:not([hidden])"); });
     if (count) count.textContent = `${n} ${n === 1 ? noun.replace(/ies$/, "y").replace(/s$/, "") : noun}`;
     if (empty) empty.hidden = n > 0;
     const u = new URL(location.href);

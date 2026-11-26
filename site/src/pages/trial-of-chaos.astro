@@ -4,17 +4,31 @@ import Watch from "../components/Watch.astro";
 import Filters from "../components/Filters.astro";
 import { DATA, tagClass, byVideoDate } from "../lib/data.js";
 const list = byVideoDate(DATA.toc.map((t, i) => ({ ...t, anchor: "t" + (i + 1) })));
-const sections = [...new Set(DATA.toc.map((t) => t.section).filter(Boolean))].sort();
+const ORDER = ["Modifiers", "Wagers", "General guidance"];
+const present = [...new Set(DATA.toc.map((t) => t.section).filter(Boolean))];
+const sections = [...ORDER.filter((s) => present.includes(s)), ...present.filter((s) => !ORDER.includes(s)).sort()];
+const groups = sections.map((s) => ({ sec: s, id: "sec-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-"), items: list.filter((t) => t.section === s) }));
 const vids = [...new Set(DATA.toc.map((t) => t.video).filter(Boolean))];
 ---
 <Base title="Trial of Chaos" section="toc" description="787prada's Trial of Chaos guide notes: which modifiers to take and avoid.">
-  <Filters noun="notes" favs placeholder="Filter Trial of Chaos notes…" fields={[{ key: "section", label: "Section", values: sections }]} />
+  <Filters noun="notes" favs placeholder="Filter Trial of Chaos notes…" fields={[{ key: "section", label: "Section", values: [...sections].sort() }]} />
   <p class="small" style="margin:-4px 0 12px">Source: {vids.map((v) => <Watch id={v} />)}</p>
-  <div class="grid two">{list.map((t) => (
-    <article class="card" data-row data-id={t.fav} data-section={t.section} id={t.anchor}>
-      <button type="button" class="star" data-fav={t.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
-      <div class="meta"><span class={tagClass("sec", t.section)}>{t.section}</span>{t.patch && <span class="chip">Patch {t.patch}</span>}</div>
-      <h2>{t.head}</h2><p class="text">{t.note}</p>
-    </article>))}</div>
+  <div class="acc-tools">
+    <div class="links"><button type="button" class="btn" data-acc-all="open">Open all</button><button type="button" class="btn" data-acc-all="close">Close all</button></div>
+  </div>
+  {groups.map((g) => (
+    <section class="acc-group" data-group>
+      <h2 class="section grp" id={g.id}><span class={tagClass("sec", g.sec)}>{g.sec}</span><span class="n">{g.items.length}</span></h2>
+      <div class="acc">{g.items.map((t) => (
+        <div class="acc-item" data-row data-id={t.fav} data-section={t.section} id={t.anchor}>
+          <details>
+            <summary>{t.head}{t.patch && <span class="chip">Patch {t.patch}</span>}</summary>
+            <div class="acc-body"><p class="text">{t.note}</p></div>
+          </details>
+          <button type="button" class="star" data-fav={t.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
+        </div>))}
+      </div>
+    </section>))}
   <p class="empty" hidden>Nothing matches that filter.</p>
+  <script>import "../scripts/acc.js";</script>
 </Base>

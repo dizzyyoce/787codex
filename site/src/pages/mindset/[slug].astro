@@ -1,0 +1,23 @@
+---
+import Base from "../../layouts/Base.astro";
+import VideoPanel from "../../components/VideoPanel.astro";
+import { DATA, url, short, tagClass } from "../../lib/data.js";
+
+export function getStaticPaths() {
+  return DATA.mindset.map((p, i) => ({ params: { slug: p.slug }, props: { p, anchor: "p" + (i + 1) } }));
+}
+const { p, anchor } = Astro.props;
+---
+<Base title={p.head} section="mindset" description={short(p.text, 160)}>
+  <div class="detail">
+    <div class="crumbs"><a href={url("mindset/")}>Mindset</a> › <a href={url(`mindset/#${anchor}`)}>{p.cat}</a></div>
+    <div class="dgrid text-first">
+    <VideoPanel main={p.video} more={p.more} />
+    <article class="card">
+      <div class="dhead"><h1 class="dtitle">{p.head}</h1><button type="button" class="star big" data-fav={p.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
+      <div class="meta"><span class={tagClass("mcat", p.cat)}>{p.cat}</span></div>
+      <p class="text">{p.full || p.text}</p>
+    </article>
+    </div>
+  </div>
+</Base>

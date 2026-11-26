@@ -65,6 +65,7 @@ export const url = (p = "") => BASE + p.replace(/^\//, "");
 
 export const buildUrl = (b) => url(`builds/${b.slug}/`);
 export const mechUrl = (m) => url(`mechanics/${m.slug}/`);
+export const mindUrl = (p) => url(`mindset/${p.slug}/`);
 // Mechanics renamed after people may have shared links: old page link -> mechanic ID.
 export const OLD_MECH_SLUGS = {
   "treat-an-anoint-and-a-jewel-mod-as-interchangeable-when-price-checking": "M39",
