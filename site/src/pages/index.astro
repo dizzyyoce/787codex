@@ -2,32 +2,30 @@
 import Base from "../layouts/Base.astro";
 import { DATA, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
 const nv = newestVideos(4);
-// Table of contents: what each section holds, with quick links that open the section already filtered.
+// Table of contents: what each section holds. Mechanics and Mindset list their groups,
+// each linking to the section already filtered.
 const count = (list, key, v) => list.filter((x) => x[key] === v).length;
 const q = (path, key, v) => url(`${path}?${key}=${encodeURIComponent(v)}`);
-const quick = (path, list, key, values, label = (v, n) => `${n} ${v}`) =>
-  values.map((v) => ({ v, n: count(list, key, v) })).filter((x) => x.n).map((x) => ({ text: label(x.v, x.n), href: q(path, key, x.v) }));
-const plural = { "Core Principle": "Core Principles", "How-To": "How-Tos" };
 const toc = [
   { title: "Builds", path: "builds/", n: DATA.builds.length,
-    lines: [{ text: "Every build covered, newest first — class, main skill, status, the core mechanic that defines it, and links out to the source video, Mobalytics, and poe.ninja." }],
-    quick: quick("builds/", DATA.builds, "status", ["Current", "Presumed Working", "Slight Nerf", "Partly Dead", "Dead", "Superseded", "Unverified"]) },
+    lines: [{ text: "Every build covered, newest first — class, main skill, status, the core mechanic that defines it, and links out to the source video, Mobalytics, and poe.ninja." }] },
   { title: "Mechanics", path: "mechanics/", n: DATA.mechanics.length,
     lines: [
       { label: `Engines (${count(DATA.mechanics, "type", "Engine")})`, href: q("mechanics/", "type", "Engine"), text: "Reusable mechanics that show up across many different builds (movement, charge generation, weapon-swap interactions) rather than being tied to just one." },
       { label: `Tips (${count(DATA.mechanics, "type", "Tip")})`, href: q("mechanics/", "type", "Tip"), text: "Reusable techniques, mechanics, and interactions that aren't specific to any single build and don't expire with balance changes." },
-    ], quick: [] },
+    ] },
   { title: "Mindset", path: "mindset/", n: DATA.mindset.length,
-    lines: [{ text: "Short mindset and build-philosophy takeaways — how to think about trade-offs, design a character from scratch, judge a skill, and approach trading and the economy." }],
-    quick: quick("mindset/", DATA.mindset, "cat", ["Core Principle", "How-To", "Mindset"], (v, n) => `${n} ${n === 1 ? v : plural[v] || v}`) },
+    lines: [
+      { label: `Core Principles (${count(DATA.mindset, "cat", "Core Principle")})`, href: q("mindset/", "cat", "Core Principle"), text: "The ideas everything else builds on — judging skills and mechanics by what they actually do, opportunity cost, and why tooltips and the meta can mislead." },
+      { label: `How-Tos (${count(DATA.mindset, "cat", "How-To")})`, href: q("mindset/", "cat", "How-To"), text: "Step-by-step guides — evaluating a skill, designing a character and its passive tree, deciding whether to copy a build, trading, and whether a farm needs rarity." },
+      { label: `Mindset (${count(DATA.mindset, "cat", "Mindset")})`, href: q("mindset/", "cat", "Mindset"), text: "How to think about the game and its community — your own biases, sunk costs, rarity and trading, online sentiment, and leaning on other people's builds." },
+    ] },
   { title: "Trial of Chaos", path: "trial-of-chaos/", n: DATA.toc.length,
-    lines: [{ text: "Trial of Chaos modifiers from freebies to always-avoid, which wagers are worth taking, and general guidance on readiness, stacking hazards and defences." }],
-    quick: quick("trial-of-chaos/", DATA.toc, "section", ["Modifiers", "Wagers", "General guidance"]) },
+    lines: [{ text: "Trial of Chaos modifiers from freebies to always-avoid, which wagers are worth taking, and general guidance on readiness, stacking hazards and defences." }] },
   { title: "Patch Changes", path: "patch-changes/", n: DATA.changes.length,
-    lines: [{ text: "What's been nerfed, reworked, or stopped working since it was originally covered, and which specific build each change affects." }],
-    quick: quick("patch-changes/", DATA.changes, "patch", [...new Set(DATA.changes.map((c) => c.patch))].sort().reverse(), (v, n) => `${n} in ${v}`) },
+    lines: [{ text: "What's been nerfed, reworked, or stopped working since it was originally covered, and which specific build each change affects." }] },
   { title: "Videos", path: "videos/", n: DATA.videos.length,
-    lines: [{ text: "Every source video, build guide and mindset alike, with dates and direct links." }], quick: [] },
+    lines: [{ text: "Every source video, build guide and mindset alike, with dates and direct links." }] },
 ];
 // Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
 const redirects = {
@@ -51,7 +49,6 @@ const redirects = {
     <div class="toc-row">
       <a class="toc-title" href={url(s.path)}>{s.title}<span class="n">{s.n}</span></a>
       {s.lines.map((l) => <p>{l.label && <><a href={l.href} style="font-weight:700">{l.label}</a> </>}{l.text}</p>)}
-      {s.quick.length > 0 && <p class="quick">{s.quick.map((x, i) => <>{i > 0 && " · "}<a href={x.href}>{x.text}</a></>)}</p>}
     </div>))}
   </div>
 

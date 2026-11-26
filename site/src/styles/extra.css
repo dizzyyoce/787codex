@@ -212,7 +212,7 @@ table.vids td.f { width: 1%; padding: 4px 0 4px 4px; }
 .acc-item summary .chip, .acc-item .acc-line .chip { font: 400 13px/1.4 var(--body); letter-spacing: 0; margin-left: auto; }
 .acc-item:target { box-shadow: inset 3px 0 0 var(--accent); }
 .acc-body { padding: 0 16px 16px 48px; display: flex; flex-direction: column; gap: 8px; }
-.acc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.acc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end; }
 .acc-tools .jumps { display: flex; flex-wrap: wrap; gap: 6px; }
 .acc-tools .jumps a { text-decoration: none; }
 .acc-tools button.btn { font-family: var(--body); cursor: pointer; }
@@ -229,3 +229,5 @@ h2.section.grp .n { color: var(--muted); }
 .toc-row > a.toc-title .n { display: inline-block; font: 400 14px/1 var(--body); color: var(--muted); margin-left: 8px; letter-spacing: 0; text-decoration: none; }
 .toc-row p { margin: 0; font-size: 15px; max-width: 75ch; }
 .toc-row .quick { font-size: 14px; color: var(--muted); }
+.acc-body .links { align-items: center; }
+.acc-body .more-link { font-size: 14px; }

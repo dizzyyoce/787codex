@@ -13,7 +13,6 @@ const groups = [...patches].sort((a, b) => comparePatch(b, a)).map((p) => ({ pat
 <Base title="Patch changes" section="changes" description="Patch changes that affected 787prada's PoE2 builds, and which builds they hit.">
   <Filters noun="changes" favs placeholder="Filter patch changes…" fields={[{ key: "patch", label: "Patch", values: patches }]} />
   <div class="acc-tools">
-    <div class="jumps">{groups.map((g) => <a class="chip" href={"#" + g.id}>Patch {g.patch} · {g.items.length}</a>)}</div>
     <div class="links"><button type="button" class="btn" data-acc-all="open">Open all</button><button type="button" class="btn" data-acc-all="close">Close all</button></div>
   </div>
   {groups.map((g) => (

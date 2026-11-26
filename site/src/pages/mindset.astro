@@ -12,7 +12,6 @@ const groups = cats.map((c) => ({ cat: c, id: "cat-" + c.toLowerCase().replace(/
 <Base title="Mindset" section="mindset" description="How 787prada thinks about Path of Exile 2: core principles and how-tos.">
   <Filters noun="ideas" favs placeholder="Filter mindset ideas…" fields={[{ key: "cat", label: "Category", values: [...cats].sort() }]} />
   <div class="acc-tools">
-    <div class="jumps">{groups.map((g) => <a class={tagClass("mcat", g.cat)} href={"#" + g.id}>{g.cat} · {g.items.length}</a>)}</div>
     <div class="links"><button type="button" class="btn" data-acc-all="open">Open all</button><button type="button" class="btn" data-acc-all="close">Close all</button></div>
   </div>
   {groups.map((g) => (

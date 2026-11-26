@@ -1,7 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Filters from "../../components/Filters.astro";
-import { DATA, mechUrl, tagClass, mechanicsNewest } from "../../lib/data.js";
+import Linked from "../../components/Linked.astro";
+import Watch from "../../components/Watch.astro";
+import { mechUrl, tagClass, mechanicsNewest } from "../../lib/data.js";
 const list = mechanicsNewest();
 const groups = [
   { type: "Engine", label: "Engine (used by many builds)", id: "engines" },
@@ -11,7 +13,7 @@ const groups = [
 <Base title="Mechanics" section="mechanics" description="Engines and tips from 787prada's PoE2 videos: Boneshatter movement, Wolf Pack charges, Culling Strike and more.">
   <Filters noun="entries" favs placeholder="Filter mechanics…" fields={[{ key: "type", label: "Type", values: ["Engine", "Tip"] }]} />
   <div class="acc-tools">
-    <div class="jumps">{groups.map((g) => <a class={tagClass("mtype", g.type)} href={"#" + g.id}>{g.label} · {g.items.length}</a>)}</div>
+    <div class="links"><button type="button" class="btn" data-acc-all="open">Open all</button><button type="button" class="btn" data-acc-all="close">Close all</button></div>
   </div>
   {groups.map((g) => (
     <section class="acc-group" data-group>
@@ -19,10 +21,17 @@ const groups = [
       <div class="acc">{g.items.map((m) => (
         <div class="acc-item" data-row data-id={m.fav} data-type={m.type} id={m.id.toLowerCase()}
           data-text={[m.name, m.desc, m.notes].filter(Boolean).join(" ").toLowerCase()}>
-          <div class="acc-line"><a class="title" href={mechUrl(m)} data-hc={"m:" + m.id}>{m.head}</a>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
+          <details>
+            <summary>{m.head}{m.patch && <span class="chip">Patch {m.patch}</span>}</summary>
+            <div class="acc-body">
+              <Linked text={m.desc} exclude={m.id} />
+              <div class="links"><Watch id={m.video} /><a class="more-link" href={mechUrl(m)}>Read full description →</a></div>
+            </div>
+          </details>
           <button type="button" class="star" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button>
         </div>))}
       </div>
     </section>))}
   <p class="empty" hidden>Nothing matches that filter.</p>
+  <script>import "../../scripts/acc.js";</script>
 </Base>
