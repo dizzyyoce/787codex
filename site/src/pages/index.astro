@@ -4,27 +4,27 @@ import { DATA, url, buildUrl, mechUrl, newestVideos } from "../lib/data.js";
 const nv = newestVideos(4);
 // Table of contents: what each section holds. Mechanics and Mindset list their groups,
 // each linking to the section already filtered.
-const count = (list, key, v) => list.filter((x) => x[key] === v).length;
-const q = (path, key, v) => url(`${path}?${key}=${encodeURIComponent(v)}`);
+// Group links jump to that group's heading on the page, without filtering the page.
+const jump = (path, id) => url(`${path}#${id}`);
 const toc = [
-  { title: "Builds", path: "builds/", n: DATA.builds.length,
+  { title: "Builds", path: "builds/",
     lines: [{ text: "Every build covered, newest first — class, main skill, status, the core mechanic that defines it, and links out to the source video, Mobalytics, and poe.ninja." }] },
-  { title: "Mechanics", path: "mechanics/", n: DATA.mechanics.length,
+  { title: "Mechanics", path: "mechanics/",
     lines: [
-      { label: `Engines (${count(DATA.mechanics, "type", "Engine")})`, href: q("mechanics/", "type", "Engine"), text: "Reusable mechanics that show up across many different builds (movement, charge generation, weapon-swap interactions) rather than being tied to just one." },
-      { label: `Tips (${count(DATA.mechanics, "type", "Tip")})`, href: q("mechanics/", "type", "Tip"), text: "Reusable techniques, mechanics, and interactions that aren't specific to any single build and don't expire with balance changes." },
+      { label: "Engines", href: jump("mechanics/", "engines"), text: "Reusable mechanics that show up across many different builds (movement, charge generation, weapon-swap interactions) rather than being tied to just one." },
+      { label: "Tips", href: jump("mechanics/", "tips"), text: "Reusable techniques, mechanics, and interactions that aren't specific to any single build and don't expire with balance changes." },
     ] },
-  { title: "Mindset", path: "mindset/", n: DATA.mindset.length,
+  { title: "Mindset", path: "mindset/",
     lines: [
-      { label: `Core Principles (${count(DATA.mindset, "cat", "Core Principle")})`, href: q("mindset/", "cat", "Core Principle"), text: "The ideas everything else builds on — judging skills and mechanics by what they actually do, opportunity cost, and why tooltips and the meta can mislead." },
-      { label: `How-Tos (${count(DATA.mindset, "cat", "How-To")})`, href: q("mindset/", "cat", "How-To"), text: "Step-by-step guides — evaluating a skill, designing a character and its passive tree, deciding whether to copy a build, trading, and whether a farm needs rarity." },
-      { label: `Mindset (${count(DATA.mindset, "cat", "Mindset")})`, href: q("mindset/", "cat", "Mindset"), text: "How to think about the game and its community — your own biases, sunk costs, rarity and trading, online sentiment, and leaning on other people's builds." },
+      { label: "Core Principles", href: jump("mindset/", "cat-core-principle"), text: "The ideas everything else builds on — judging skills and mechanics by what they actually do, opportunity cost, and why tooltips and the meta can mislead." },
+      { label: "How-Tos", href: jump("mindset/", "cat-how-to"), text: "Step-by-step guides — evaluating a skill, designing a character and its passive tree, deciding whether to copy a build, trading, and whether a farm needs rarity." },
+      { label: "Mindset", href: jump("mindset/", "cat-mindset"), text: "How to think about the game and its community — your own biases, sunk costs, rarity and trading, online sentiment, and leaning on other people's builds." },
     ] },
-  { title: "Trial of Chaos", path: "trial-of-chaos/", n: DATA.toc.length,
+  { title: "Trial of Chaos", path: "trial-of-chaos/",
     lines: [{ text: "Trial of Chaos modifiers from freebies to always-avoid, which wagers are worth taking, and general guidance on readiness, stacking hazards and defences." }] },
-  { title: "Patch Changes", path: "patch-changes/", n: DATA.changes.length,
+  { title: "Patch Changes", path: "patch-changes/",
     lines: [{ text: "What's been nerfed, reworked, or stopped working since it was originally covered, and which specific build each change affects." }] },
-  { title: "Videos", path: "videos/", n: DATA.videos.length,
+  { title: "Videos", path: "videos/",
     lines: [{ text: "Every source video, build guide and mindset alike, with dates and direct links." }] },
 ];
 // Old one-page links (#builds, #build-b33, #m01) redirect to the new pages.
@@ -47,7 +47,7 @@ const redirects = {
   <h2 class="section">What's in the Codex</h2>
   <div class="acc">{toc.map((s) => (
     <div class="toc-row">
-      <a class="toc-title" href={url(s.path)}>{s.title}<span class="n">{s.n}</span></a>
+      <a class="toc-title" href={url(s.path)}>{s.title}</a>
       {s.lines.map((l) => <p>{l.label && <><a href={l.href} style="font-weight:700">{l.label}</a> </>}{l.text}</p>)}
     </div>))}
   </div>
