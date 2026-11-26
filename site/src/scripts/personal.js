@@ -14,16 +14,37 @@ const ss = {
 };
 
 // ---- New since last visit ------------------------------------------------------
-// The first page of a browsing session remembers the previous visit date for the whole
-// session, so badges don't vanish as you click around. A first-ever visit shows none.
-const today = new Date().toISOString().slice(0, 10);
-let since = ss.get("c787-since");
-if (since === null) {
-  since = store.get("c787-lastVisit", "") || "";
-  ss.set("c787-since", since);
+// A visit remembers the previous visit date while you click around, so badges don't vanish
+// mid-visit. A visit ends after VISIT_GAP_H hours without opening a page (so a tab left open
+// on a phone doesn't keep its badges for days), and a build is never "New" once its video is
+// more than NEW_MAX_DAYS old. A first-ever visit shows none.
+const VISIT_GAP_H = 3;
+const NEW_MAX_DAYS = 7;
+const now = Date.now();
+const day = (t) => new Date(t).toISOString().slice(0, 10);
+const today = day(now);
+const cutoff = day(now - NEW_MAX_DAYS * 864e5);
+let visit = null;
+try { visit = JSON.parse(ss.get("c787-visit")); } catch {}
+if (!visit || typeof visit.at !== "number" || now - visit.at > VISIT_GAP_H * 36e5) {
+  visit = { since: store.get("c787-lastVisit", "") || "" };
   store.set("c787-lastVisit", today);
 }
-const isNew = (d) => !!since && !!d && d > since;
+visit.at = now;
+ss.set("c787-visit", JSON.stringify(visit));
+const since = visit.since;
+const isRecent = (d) => !!since && !!d && d > since && d >= cutoff;
+
+// Opening a build's page marks it as seen: its badge shows on that page this once, then
+// nowhere else. Seen builds are kept only while they could still count as new.
+const seen = {};
+for (const [id, d] of Object.entries(store.get("c787-seen", {}) || {})) if (d >= cutoff) seen[id] = d;
+const pageTitle = document.querySelector("h1[data-date]");
+const pageId = pageTitle && pageTitle.closest(".dhead")?.querySelector("[data-fav]")?.dataset.fav;
+const pageWasNew = !!pageId && !seen[pageId] && isRecent(pageTitle.dataset.date);
+if (pageWasNew) seen[pageId] = pageTitle.dataset.date;
+store.set("c787-seen", seen);
+const isNew = (d, id) => isRecent(d) && (!seen[id] || (id === pageId && pageWasNew));
 
 function badge(el) {
   if (el.querySelector(".newbadge")) return;
@@ -38,10 +59,13 @@ function badge(el) {
 
 if (since) {
   // Video rows (Videos tab, home page's Newest videos) carry data-date too but get no badge.
-  document.querySelectorAll("[data-date]:not(tr)").forEach((el) => { if (isNew(el.dataset.date)) badge(el); });
+  document.querySelectorAll("[data-date]:not(tr)").forEach((el) => {
+    const id = el.dataset.id || el.closest(".dhead")?.querySelector("[data-fav]")?.dataset.fav;
+    if (isNew(el.dataset.date, id)) badge(el);
+  });
   loadIndex().then(({ items }) => {
     const counts = {
-      builds: items.filter((i) => i.type === "Build" && isNew(i.date)).length,
+      builds: items.filter((i) => i.type === "Build" && isNew(i.date, i.k.slice(2)) && i.k.slice(2) !== pageId).length,
     };
     for (const [k, n] of Object.entries(counts)) {
       const tab = document.querySelector(`[data-tab="${k}"]`);
