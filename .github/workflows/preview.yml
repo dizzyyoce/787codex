@@ -1,0 +1,18 @@
+name: Refresh the test copy
+
+# Pushing to the preview branch re-runs "Build and publish the site" on main, which
+# rebuilds the live site from main (unchanged) and the test copy at /787codex/preview/.
+on:
+  push:
+    branches: [preview]
+
+permissions:
+  actions: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}

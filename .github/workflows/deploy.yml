@@ -1,5 +1,11 @@
 name: Build and publish the site
 
+# The live site is always built from main, whichever branch started the run.
+# If a "preview" branch exists, it is built as a test copy at /787codex/preview/
+# (hidden from search engines, not counted, no offline copy). It uses main's workbook,
+# so the test copy shows the same content as the live site.
+# A push to the preview branch re-runs this workflow on main (see preview.yml), because
+# GitHub Pages only publishes from main.
 on:
   push:
     branches: [main]
@@ -19,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -37,6 +45,31 @@ jobs:
           npm run build
       - name: Add the spreadsheet download
         run: cp compendium.xlsx "site/dist/787prada_Codex.xlsx"
+
+      - name: Look for a preview branch
+        id: preview
+        run: |
+          if git ls-remote --exit-code --heads origin preview >/dev/null; then echo "found=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v7
+        if: steps.preview.outputs.found == 'true'
+        with:
+          ref: preview
+          path: preview-src
+      - name: Build the test copy from the preview branch
+        if: steps.preview.outputs.found == 'true'
+        # A broken test copy never stops the live site from publishing.
+        continue-on-error: true
+        env:
+          SITE_BASE: /787codex/preview/
+          SITE_PREVIEW: "1"
+        run: |
+          python preview-src/scripts/export.py compendium.xlsx preview-src/site/src/data/codex.json
+          cd preview-src/site
+          npm ci
+          npm run build
+          rm -f dist/sw.js dist/sitemap.xml
+          cp -r dist ../../site/dist/preview
+
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
