@@ -2,15 +2,21 @@
 import Linked from "../../components/Linked.astro";
 import Base from "../../layouts/Base.astro";
 import VideoPanel from "../../components/VideoPanel.astro";
-import { DATA, V, url, buildUrl, statusClass, short, tagClass } from "../../lib/data.js";
+import { DATA, V, M, url, buildUrl, mechUrl, statusClass, short, tagClass, OLD_MECH_SLUGS } from "../../lib/data.js";
 
 export function getStaticPaths() {
-  return DATA.mechanics.map((m) => ({ params: { slug: m.slug }, props: { m } }));
+  return [
+    ...DATA.mechanics.map((m) => ({ params: { slug: m.slug }, props: { m } })),
+    // Old links to renamed mechanics forward to the current page.
+    ...Object.entries(OLD_MECH_SLUGS).filter(([old, id]) => M[id] && M[id].slug !== old)
+      .map(([old, id]) => ({ params: { slug: old }, props: { m: M[id], forward: true } })),
+  ];
 }
-const { m } = Astro.props;
+const { m, forward } = Astro.props;
 const usedBy = DATA.builds.filter((b) => b.mechIds.includes(m.id));
 const more = m.more.map((id) => V[id]).filter(Boolean);
 ---
+{forward ? <html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content={`0; url=${mechUrl(m)}`}><link rel="canonical" href={mechUrl(m)}><title>{m.head}</title></head><body><p>This page has moved: <a href={mechUrl(m)}>{m.head}</a></p></body></html> :
 <Base title={m.head} section="mechanics" image={`og/mechanics/${m.slug}.png`} description={short(m.desc, 160)}>
   <div class="detail">
     <div class="crumbs"><a href={url("mechanics/")}>Mechanics</a> › {m.type}</div>
@@ -30,3 +36,4 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
     </div>
   </div>
 </Base>
+}
