@@ -16,6 +16,9 @@ const fullTitle = title ? `${title} · 787prada Codex` : "787prada Codex";
 const desc = description || "A community reference compiled from 787prada’s PoE2 build guides, mechanics breakdowns and strategy videos.";
 const nv = newestVideos(1)[0];
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// Test copy (built from the "preview" branch into /787codex/preview/): hidden from search engines,
+// no visitor counting, no offline copy, and a banner saying it isn't the live site.
+const PREVIEW = process.env.SITE_PREVIEW === "1";
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +27,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{fullTitle}</title>
 <meta name="description" content={desc}>
-{noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
+{noindex || PREVIEW ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
 <meta property="og:type" content="website">
 <meta property="og:title" content={fullTitle}>
 <meta property="og:description" content={desc}>
@@ -39,9 +42,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <link rel="manifest" href={url("manifest.webmanifest")}>
 <link rel="apple-touch-icon" href={url("icon-192.png")}>
 <meta name="theme-color" content="#15161a">
-{GOATCOUNTER && <script is:inline async data-goatcounter={`https://${GOATCOUNTER}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>}
+{GOATCOUNTER && !PREVIEW && <script is:inline async data-goatcounter={`https://${GOATCOUNTER}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>}
 </head>
-<body data-base={url()} data-sw={url("sw.js")}>
+<body data-base={url()} data-sw={PREVIEW ? undefined : url("sw.js")}>
+{PREVIEW && <div style="background:var(--accent);color:#fff;text-align:center;font-size:14px;padding:6px 12px">Test copy, not the live site · <a href="https://dizzyyoce.github.io/787codex/" style="color:#fff">Go to the live site</a></div>}
 <header class={"top wrap" + (compactHeader ? " compact" : "")}>
  <div class="intro">
   <div class="brand"><a class="home" href={url()}><h1>787prada Codex</h1></a><span class="updated">Updated {fmtDate(DATA.updated)}</span></div>
