@@ -76,6 +76,7 @@ builds = [{"id": b["Build ID"], "name": b["Build"], "version": b["Version"], "ni
           for b in rows("Builds")]
 mechanics = [{"id": m["ID"], "name": m["Mechanic"], "type": m["Type"], "desc": m["Description"], "notes": m["Notes"],
               "notesUrl": m.get("Notes__url"), "patch": m["Patch"], "video": m["Video"],
+              "full": m.get("Full description"),
               "more": split_list(m["More sources"]), "_row": m["_row"]} for m in rows("Mechanics")]
 changes = [{"patch": c["Patch"], "item": c["Item / node / mechanic"], "what": c["What changed"],
             "affects": c["Affected build(s)"], "source": c["Source"], "video": c["Video"],
@@ -83,11 +84,14 @@ changes = [{"patch": c["Patch"], "item": c["Item / node / mechanic"], "what": c[
            for c in rows("Patch Changes")]
 toc = [{"section": t["Section"], "topic": t["Topic"], "note": t["Note"], "patch": t["Patch"], "video": t["Video"],
         "_row": t["_row"]} for t in rows("Trial of Chaos")]
-mindset = [{"cat": m["Category"], "title": m["Title"], "text": m["Takeaway"], "video": m["Video"],
+mindset = [{"cat": m["Category"], "title": m["Title"], "text": m["Takeaway"], "full": m.get("Full write-up"), "video": m["Video"],
             "more": split_list(m["More sources"]), "_row": m["_row"]} for m in rows("Mindset")]
 
 unique_slugs(builds, lambda b: b["name"] + (" " + b["version"] if b["version"] else ""))
 unique_slugs(mechanics, lambda m: m["name"])
+for i, m in enumerate(mindset):
+    m["id"] = f"p{i + 1}"
+unique_slugs(mindset, lambda m: m["title"])
 
 
 # --- link builds and mechanics -------------------------------------------------

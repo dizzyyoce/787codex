@@ -25,7 +25,7 @@ const more = m.more.map((id) => V[id]).filter(Boolean);
     <article class="card">
       <div class="dhead"><h1 class="dtitle">{m.head}</h1><button type="button" class="star big" data-fav={m.fav} aria-pressed="false" aria-label="Add to favourites" title="Add to favourites">☆</button></div>
       <div class="meta"><span class={tagClass("mtype", m.type)}>{m.type === "Engine" ? "Engine (used by many builds)" : "Tip"}</span>{m.patch && <span class="chip">Patch {m.patch}</span>}</div>
-      <Linked text={m.desc} exclude={m.id} />
+      <Linked text={m.full || m.desc} exclude={m.id} />
       {m.notes && !m.notesUrl && <p class="note">{m.notes}</p>}
       {m.notesUrl && <div class="links"><a class="btn" href={m.notesUrl} target="_blank" rel="noopener">{m.notes} ↗</a></div>}
       {usedBy.length > 0 && <>
