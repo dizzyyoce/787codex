@@ -14,16 +14,26 @@ const ss = {
 };
 
 // ---- New since last visit ------------------------------------------------------
-// The first page of a browsing session remembers the previous visit date for the whole
-// session, so badges don't vanish as you click around. A first-ever visit shows none.
-const today = new Date().toISOString().slice(0, 10);
-let since = ss.get("c787-since");
-if (since === null) {
-  since = store.get("c787-lastVisit", "") || "";
-  ss.set("c787-since", since);
+// A visit remembers the previous visit date while you click around, so badges don't vanish
+// mid-visit. A visit ends after VISIT_GAP_H hours without opening a page (so a tab left open
+// on a phone doesn't keep its badges for days), and a build is never "New" once its video is
+// more than NEW_MAX_DAYS old. A first-ever visit shows none.
+const VISIT_GAP_H = 3;
+const NEW_MAX_DAYS = 7;
+const now = Date.now();
+const day = (t) => new Date(t).toISOString().slice(0, 10);
+const today = day(now);
+const cutoff = day(now - NEW_MAX_DAYS * 864e5);
+let visit = null;
+try { visit = JSON.parse(ss.get("c787-visit")); } catch {}
+if (!visit || typeof visit.at !== "number" || now - visit.at > VISIT_GAP_H * 36e5) {
+  visit = { since: store.get("c787-lastVisit", "") || "" };
   store.set("c787-lastVisit", today);
 }
-const isNew = (d) => !!since && !!d && d > since;
+visit.at = now;
+ss.set("c787-visit", JSON.stringify(visit));
+const since = visit.since;
+const isNew = (d) => !!since && !!d && d > since && d >= cutoff;
 
 function badge(el) {
   if (el.querySelector(".newbadge")) return;
